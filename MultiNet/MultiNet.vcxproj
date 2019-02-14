@@ -121,6 +121,7 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NeuralNet.cpp" />
+    <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Topology.cpp" />
   </ItemGroup>

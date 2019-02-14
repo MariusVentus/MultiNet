@@ -18,8 +18,8 @@ class Neuron {
 public:
 //Objects
 	struct Synapse {
-		float weight;
-		float deltaWeight;
+		float weight = 0.0f;
+		float deltaWeight = 0.0f;
 	};
 //Public Functions
 	Neuron(unsigned numInputs, unsigned myIndex, unsigned myType);
@@ -36,7 +36,7 @@ public:
 private:
 	SettingManager Settings; //No init yet since everything currently static. 
 //Variables
-	std::vector<Synapse> m_outputWeights;
+	std::vector<Synapse> m_inputWeights;
 	float m_gradient;
 	unsigned m_myIndex;
 	unsigned m_myType;
@@ -47,7 +47,7 @@ private:
 	float SumDOW(const Layer& nextLayer); //Sum of Derivatives of Weights.
 
 	//Randomization
-	static float RandomWeightStandard(void);
+	static float RandomWeightStandard(void) { return 0.0f; };
 
 	//Transfer Functions
 	static float TransferFunction(unsigned inType, float x);
