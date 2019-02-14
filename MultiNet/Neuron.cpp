@@ -1,11 +1,16 @@
 #include "Neuron.h"
 #include <iostream>
+#include <random>
 
 Neuron::Neuron(unsigned numInputs, unsigned myIndex, unsigned myType)
 {
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::normal_distribution<float> nDist(0, 1);
+
 	for (unsigned cnxn = 0; cnxn < numInputs; ++cnxn) {
 		m_inputWeights.push_back(Synapse());
-		m_inputWeights.back().weight = RandomWeightStandard();
+		m_inputWeights.back().weight = nDist(rng);
 	}
 	m_myIndex = myIndex;
 	m_myType = myType;
