@@ -41,6 +41,38 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 
 void NeuralNet::BackProp(const std::vector<float>& targetVals)
 {
+	Layer& outputLayer = m_layers.back();
+	m_error = 0.0f;
+	//Error
+	for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+		float delta = targetVals[n] - outputLayer[n].GetOutputVal();
+		m_error += delta*delta;
+	}
+	m_error /= outputLayer.size() - 1;
+	m_error = sqrt(m_error);
+
+	//Output Gradients
+	for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+		outputLayer[n].CalcOutputGradients(targetVals[n]);
+	}
+	//Hidden Gradients
+	for (unsigned layerNum = unsigned(m_layers.size()) - 2; layerNum > 0; layerNum--) {
+		Layer& hiddenLayer = m_layers[layerNum];
+		Layer& nextLayer = m_layers[layerNum + 1];
+
+		for (unsigned n = 0; n < hiddenLayer.size(); ++n) {
+			hiddenLayer[n].CalcHiddenGradients(nextLayer);
+		}
+	}
+	//Update Weights
+	for (unsigned layerNum = unsigned(m_layers.size()) - 1; layerNum > 0; layerNum--) {
+		Layer& layer = m_layers[layerNum];
+		Layer& prevLayer = m_layers[layerNum - 1];
+
+		for (unsigned n = 0; n < layer.size() - 1; ++n) {
+			layer[n].UpdateInputWeights(prevLayer);
+		}
+	}
 
 }
 

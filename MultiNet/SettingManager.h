@@ -14,7 +14,7 @@ public:
 	static constexpr Initialization netI = Initialization::Normal;
 
 	//Learning
-	static constexpr float eta = .03f;
+	static constexpr float eta = .2f;
 	static constexpr float alpha = 0.5f;
 	static constexpr float leak = 0.01f; //For the Relu.
 
