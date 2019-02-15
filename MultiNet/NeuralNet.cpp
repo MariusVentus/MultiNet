@@ -59,8 +59,8 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 	for (unsigned layerNum = unsigned(m_layers.size()) - 2; layerNum > 0; layerNum--) {
 		Layer& hiddenLayer = m_layers[layerNum];
 		Layer& nextLayer = m_layers[layerNum + 1];
-
-		for (unsigned n = 0; n < hiddenLayer.size(); ++n) {
+		//Last Neuron in a Layer is always Bias. Slight optimization with -1. 
+		for (unsigned n = 0; n < hiddenLayer.size() - 1; ++n) {
 			hiddenLayer[n].CalcHiddenGradients(nextLayer);
 		}
 	}

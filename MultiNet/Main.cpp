@@ -12,9 +12,9 @@ int main() {
 	Topology Top(3);
 	std::cout << "Hello! \n";
 
-	Top.CreateMonoLayer(0, 2, 3);
-	Top.CreateMonoLayer(1, 2, 3);
-	Top.CreateMonoLayer(2, 1, 3);
+	Top.CreateMonoLayer(0, 2, 4);
+	Top.CreateMonoLayer(1, 2, 4);
+	Top.CreateMonoLayer(2, 1, 4);
 
 	NeuralNet NN(Top);
 
@@ -22,7 +22,7 @@ int main() {
 	unsigned zip = 0;
 
 	//Crappy Quick XOR Test. 
-	for (unsigned bleh = 0; bleh < 5000; bleh++) {
+	for (unsigned bleh = 0; bleh < 20000; bleh++) {
 		std::vector<float> TmpIn;
 		std::vector<float> TmpOut;
 		std::vector<float> resultVals;
@@ -30,7 +30,6 @@ int main() {
 		TmpIn.push_back(T1[zip]);
 		TmpIn.push_back(T2[zip]);
 		TmpOut.push_back(outVal[zip]);
-		TmpOut.push_back(1.0f - outVal[zip]);
 
 		//Feed
 		NN.FeedForward(TmpIn);

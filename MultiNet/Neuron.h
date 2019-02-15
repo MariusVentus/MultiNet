@@ -37,17 +37,17 @@ private:
 	SettingManager Settings; //No init yet since everything currently static. 
 //Variables
 	std::vector<Synapse> m_inputWeights;
-	float m_gradient;
+	float m_gradient = 0.0f;
 	unsigned m_myIndex;
 	unsigned m_myType;
 	float m_outputVal = 0.0f;
 	float m_inputVals = 0.0f;
 
 //Private Functions
-	float SumDOW(const Layer& nextLayer); //Sum of Derivatives of Weights.
+	float SumDOW(const Layer& nextLayer) const; //Sum of Derivatives of Weights.
 
 	//Randomization
-	static float RandomWeightStandard(void) { return 0.0f; };
+	static float RandomWeightStandard(void) { return 4.0f; } //Rolled a Die 
 
 	//Transfer Functions
 	static float TransferFunction(unsigned inType, float x);

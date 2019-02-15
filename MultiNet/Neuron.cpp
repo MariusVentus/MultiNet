@@ -54,7 +54,7 @@ void Neuron::UpdateInputWeights(Layer& prevLayer)
 	}
 }
 
-float Neuron::SumDOW(const Layer& nextLayer)
+float Neuron::SumDOW(const Layer& nextLayer) const
 {
 	float sum = 0.0;
 	for (unsigned n = 0; n < nextLayer.size() - 1; ++n) {
