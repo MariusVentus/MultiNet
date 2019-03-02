@@ -9,6 +9,7 @@ class DataHandler {
 public:
 	
 private:
+	bool m_EoF = false;
 	std::ifstream inStream;
 	std::vector<std::vector<float>> dataBuffer;
 
@@ -17,13 +18,15 @@ public:
 	DataHandler(const std::string& ioFile);
 
 	unsigned GetBuffSize(void) const { return dataBuffer.size(); }
+	bool GetEoF(void) const { return m_EoF; }
 	unsigned GetRowSize(void) const { return dataBuffer[0].size(); }
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
 
 	void ReloadBuffer(void);
 
 private:
-	void LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream& dataStream, const unsigned bufferSize);
+	//Returns true if it can continue, false if at end of file. 
+	bool LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream& dataStream, const unsigned bufferSize);
 	//Identifies "?" character, which denotes a missing value. This should be tossed. 
 	bool MissingVals(const std::string& line);
 	//Reads Line, clears out common issues with a text csv (white space, lines, extra carriage returns).

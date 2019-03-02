@@ -10,19 +10,17 @@ DataHandler::DataHandler(const std::string & ioFile)
 
 void DataHandler::ReloadBuffer(void)
 {
-	//This still needs to check for trailing junk.
 	dataBuffer.clear();
-	if (!inStream.eof()) {
-		LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
-	}
-	else {
+	m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+
+	if(m_EoF == true && dataBuffer.empty()){
 		inStream.clear();
 		inStream.seekg(0, inStream.beg);
-		LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+		m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
 	}
 }
 
-void DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream & dataStream, const unsigned bufferSize)
+bool DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream & dataStream, const unsigned bufferSize)
 {
 	std::string dataTemp;
 
@@ -30,10 +28,11 @@ void DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstr
 		dataTemp.clear();
 		ReadLineAndClean(dataStream, dataTemp);
 		if (dataTemp.empty()) {
-			break;
+			return false;
 		}
 		buffer.emplace_back(SplitIntoFloatTokens(dataTemp));
 	}
+	return true;
 }
 
 bool DataHandler::MissingVals(const std::string & line)
