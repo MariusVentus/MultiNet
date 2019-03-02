@@ -5,7 +5,6 @@
 void DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream & dataStream, const unsigned bufferSize)
 {
 	std::string dataTemp;
-	std::vector<float> dataVec;
 
 	for (unsigned nLines = 0; nLines < bufferSize; ++nLines) {
 		dataTemp.clear();
