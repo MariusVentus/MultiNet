@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class SettingManager {
 public:
@@ -8,6 +9,12 @@ public:
 	enum class Clipping { None, HardClip, L2Clip };
 	static constexpr Clipping netC = Clipping::None;
 	static constexpr float clipThreshold = 1.0f;
+
+	//Data
+	static constexpr unsigned bufferSize = 50; 
+	std::string inputFile = "Data\\inputDefault.txt";
+	std::string targetFile = "Data\\outputDefault.txt";
+	std::string singleIOFile = "Data\\ioDefault.txt";
 
 	//Initialization
 	enum class Initialization { Normal, XavierSimple, XavierFull};

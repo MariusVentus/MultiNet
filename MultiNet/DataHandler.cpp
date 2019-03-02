@@ -1,6 +1,26 @@
 #include "DataHandler.h"
-#include <fstream>
 #include <sstream>
+
+DataHandler::DataHandler(const std::string & ioFile)
+	:
+	inStream(ioFile)
+{
+		LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+}
+
+void DataHandler::ReloadBuffer(void)
+{
+	//This still needs to check for trailing junk.
+	dataBuffer.clear();
+	if (!inStream.eof()) {
+		LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+	}
+	else {
+		inStream.clear();
+		inStream.seekg(0, inStream.beg);
+		LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+	}
+}
 
 void DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream & dataStream, const unsigned bufferSize)
 {
@@ -26,7 +46,7 @@ bool DataHandler::MissingVals(const std::string & line)
 	}
 }
 
-void DataHandler::ReadLineAndClean(std::ifstream & dataStream, std::string & dataString)
+void DataHandler::ReadLineAndClean(std::ifstream& dataStream, std::string & dataString)
 {
 	do {
 		do {
@@ -42,6 +62,9 @@ void DataHandler::ReadLineAndClean(std::ifstream & dataStream, std::string & dat
 		}
 		while (dataString.find(",,") != std::string::npos) {
 			dataString.erase(dataString.find(",,"), 1);
+		}
+		while (dataString.find(",") == 0) {
+			dataString.erase(dataString.find(","), 1);
 		}
 	} while (!dataStream.eof() && dataString.empty());
 }
