@@ -10,6 +10,7 @@ public:
 	
 private:
 	bool m_EoF = false;
+	bool m_EoFDelayed = false;
 	std::ifstream inStream;
 	std::vector<std::vector<float>> dataBuffer;
 
@@ -18,11 +19,12 @@ public:
 	DataHandler(const std::string& ioFile);
 
 	unsigned GetBuffSize(void) const { return dataBuffer.size(); }
-	bool GetEoF(void) const { return m_EoF; }
+	bool GetEoF(void) const { return m_EoFDelayed; }
 	unsigned GetRowSize(void) const { return dataBuffer[0].size(); }
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
 
 	void ReloadBuffer(void);
+	void ResetEoF(void) { m_EoFDelayed = false; }
 
 private:
 	//Returns true if it can continue, false if at end of file. 

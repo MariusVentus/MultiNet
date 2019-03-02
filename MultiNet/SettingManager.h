@@ -11,7 +11,8 @@ public:
 	static constexpr float clipThreshold = 1.0f;
 
 	//Data
-	static constexpr unsigned bufferSize = 50; 
+	static constexpr unsigned bufferSize = 4;
+	static constexpr bool SemiCasComma = true;
 	std::string inputFile = "Data\\inputDefault.txt";
 	std::string targetFile = "Data\\outputDefault.txt";
 	std::string singleIOFile = "Data\\ioDefault.txt";

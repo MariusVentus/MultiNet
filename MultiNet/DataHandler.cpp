@@ -5,7 +5,7 @@ DataHandler::DataHandler(const std::string & ioFile)
 	:
 	inStream(ioFile)
 {
-		LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+	m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
 }
 
 void DataHandler::ReloadBuffer(void)
@@ -14,6 +14,7 @@ void DataHandler::ReloadBuffer(void)
 	m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
 
 	if(m_EoF == true && dataBuffer.empty()){
+		m_EoFDelayed = m_EoF;
 		inStream.clear();
 		inStream.seekg(0, inStream.beg);
 		m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
@@ -51,6 +52,12 @@ void DataHandler::ReadLineAndClean(std::ifstream& dataStream, std::string & data
 		do {
 			std::getline(dataStream, dataString);
 		} while (MissingVals(dataString));
+
+		if (SettingManager::SemiCasComma == true) {
+			while (dataString.find(";") != std::string::npos) {
+				dataString.replace(dataString.find(";"), 1, ",");
+			}
+		}
 
 
 		while (dataString.find(" ") != std::string::npos) {
