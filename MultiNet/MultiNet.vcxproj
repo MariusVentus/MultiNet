@@ -123,8 +123,15 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NeuralNet.cpp" />
     <ClCompile Include="Neuron.cpp" />
+    <ClCompile Include="SettingManager.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Topology.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Data\inputDefault.txt" />
+    <Text Include="Data\ioDefault.txt" />
+    <Text Include="Data\outputDefault.txt" />
+    <Text Include="Settings\Settings.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

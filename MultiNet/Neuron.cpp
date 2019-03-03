@@ -3,7 +3,9 @@
 #include <iostream>
 #include <random>
 
-Neuron::Neuron(unsigned numInputs, unsigned myIndex, unsigned myType)
+Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned myIndex, unsigned myType)
+	:
+	m_neuronSet(nSet)
 {
 	std::random_device rd;
 	std::mt19937 rng(rd());
@@ -47,7 +49,7 @@ void Neuron::UpdateInputWeights(Layer& prevLayer)
 		float oldDeltaWeight = m_inputWeights[n].deltaWeight;
 
 		float newDeltaWeight =
-			SettingManager::eta*prevLayer[n].GetOutputVal()*m_gradient + SettingManager::alpha*oldDeltaWeight;
+			m_neuronSet.GetEta()*prevLayer[n].GetOutputVal()*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
 
 		m_inputWeights[n].deltaWeight = newDeltaWeight;
 		m_inputWeights[n].weight += newDeltaWeight;
@@ -80,7 +82,7 @@ float Neuron::TransferFunction(unsigned inType, float x)
 			return x;
 		}
 		else {
-			return SettingManager::leak*x;
+			return m_neuronSet.GetLeak()*x;
 		}
 		//Gaussian
 	case 5:	return exp(-(x*x));
@@ -107,7 +109,7 @@ float Neuron::TransferFunctionDerivative(unsigned inType, float x)
 			return 1.0f;
 		}
 		else if (x < 0.0f) {
-			return SettingManager::leak;
+			return m_neuronSet.GetLeak();
 		}
 		else {
 			return 1.0f;

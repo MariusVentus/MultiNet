@@ -5,6 +5,7 @@
 #include <assert.h>
 
 int main() {
+	SettingManager Settings("Settings\\Settings.txt");
 	DataHandler input("Data\\inputDefault.txt");
 	DataHandler output("Data\\outputDefault.txt");
 	assert(input.GetBuffSize() == output.GetBuffSize());
@@ -13,7 +14,7 @@ int main() {
 	Top.CreateMonoLayer(0, input.GetRowSize(), 1);
 	Top.CreateMonoLayer(1, 2, 3);
 	Top.CreateMonoLayer(2, output.GetRowSize(), 3);
-	NeuralNet NN(Top);
+	NeuralNet NN(Top, Settings);
 	std::cin.get();
 
 	bool keepTraining = true;

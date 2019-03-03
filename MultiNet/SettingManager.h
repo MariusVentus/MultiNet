@@ -13,21 +13,32 @@ public:
 	//Data
 	static constexpr unsigned bufferSize = 4;
 	static constexpr bool SemiCasComma = true;
-	std::string inputFile = "Data\\inputDefault.txt";
-	std::string targetFile = "Data\\outputDefault.txt";
-	std::string singleIOFile = "Data\\ioDefault.txt";
 
 	//Initialization
 	enum class Initialization { Normal, XavierSimple, XavierFull};
 	static constexpr Initialization netI = Initialization::Normal;
 
-	//Learning
-	static constexpr float eta = .2f;
-	static constexpr float alpha = 0.5f;
-	static constexpr float leak = 0.01f; //For the Relu.
-
 	//Loss
 	enum class Loss { MeanSquared, LogLoss };
 	static constexpr Loss netL = Loss::MeanSquared;
+
+private:
+	//Learning
+	float eta = .2f;
+	float alpha = 0.5f;
+	float leak = 0.01f; //For the Relu.
+
+//Functions
+public:
+	SettingManager() = delete;
+	SettingManager(const std::string& setFile);
+
+	float GetEta(void) const { return eta; }
+	float GetAlpha(void) const { return alpha; }
+	float GetLeak(void) const { return leak; }
+
+private:
+	void InputSettings(const std::string& dataString);
+	void ReadLineAndClean(std::ifstream& dataStream, std::string& dataString);
 
 };

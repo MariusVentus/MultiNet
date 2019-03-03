@@ -22,7 +22,7 @@ public:
 		float deltaWeight = 0.0f;
 	};
 //Public Functions
-	Neuron(unsigned numInputs, unsigned myIndex, unsigned myType);
+	Neuron(const SettingManager& nSet, unsigned numInputs, unsigned myIndex, unsigned myType);
 	void CalcHiddenGradients(const Layer& nextLayer);
 	void CalcOutputGradients(float targetVal);
 	void FeedForward(const Layer& prevLayer);
@@ -34,7 +34,6 @@ public:
 	void SetOutputVal(float val) { m_outputVal = val; }
 
 private:
-	SettingManager Settings; //No init yet since everything currently static. 
 //Variables
 	std::vector<Synapse> m_inputWeights;
 	float m_gradient = 0.0f;
@@ -42,6 +41,7 @@ private:
 	unsigned m_myType;
 	float m_outputVal = 0.0f;
 	float m_inputVals = 0.0f;
+	SettingManager m_neuronSet;
 
 //Private Functions
 	float SumDOW(const Layer& nextLayer) const; //Sum of Derivatives of Weights.
@@ -50,7 +50,7 @@ private:
 	static float RandomWeightStandard(void) { return 4.0f; } //Rolled a Die 
 
 	//Transfer Functions
-	static float TransferFunction(unsigned inType, float x);
+	float TransferFunction(unsigned inType, float x);
 	float TransferFunctionDerivative(unsigned inType, float x);
 
 };

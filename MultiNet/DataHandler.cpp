@@ -49,17 +49,19 @@ bool DataHandler::MissingVals(const std::string & line)
 void DataHandler::ReadLineAndClean(std::ifstream& dataStream, std::string & dataString)
 {
 	do {
+		//Remove Question Marks
 		do {
 			std::getline(dataStream, dataString);
 		} while (MissingVals(dataString));
 
+		//SemiColons to Comma
 		if (SettingManager::SemiCasComma == true) {
 			while (dataString.find(";") != std::string::npos) {
 				dataString.replace(dataString.find(";"), 1, ",");
 			}
 		}
 
-
+		//Remove White Space, Empty New Lines, Leading and Double Commas.
 		while (dataString.find(" ") != std::string::npos) {
 			dataString.erase(dataString.find(" "), 1);
 		}

@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Settings">
+      <UniqueIdentifier>{28a34587-bf9c-4068-b6a0-26dd0c352644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{f2881fff-5d4f-4972-870f-8e22524c06cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cortex.h">
@@ -56,5 +62,22 @@
     <ClCompile Include="DataHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SettingManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Settings\Settings.txt">
+      <Filter>Settings</Filter>
+    </Text>
+    <Text Include="Data\inputDefault.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="Data\ioDefault.txt">
+      <Filter>Data</Filter>
+    </Text>
+    <Text Include="Data\outputDefault.txt">
+      <Filter>Data</Filter>
+    </Text>
   </ItemGroup>
 </Project>
