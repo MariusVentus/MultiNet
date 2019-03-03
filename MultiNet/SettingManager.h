@@ -10,10 +10,6 @@ public:
 	static constexpr Clipping netC = Clipping::None;
 	static constexpr float clipThreshold = 1.0f;
 
-	//Data
-	static constexpr unsigned bufferSize = 4;
-	static constexpr bool SemiCasComma = true;
-
 	//Initialization
 	enum class Initialization { Normal, XavierSimple, XavierFull};
 	static constexpr Initialization netI = Initialization::Normal;
@@ -23,22 +19,29 @@ public:
 	static constexpr Loss netL = Loss::MeanSquared;
 
 private:
+	//Data
+	unsigned bufferSize;
+	bool SemiCasComma;
+
 	//Learning
-	float eta = .2f;
-	float alpha = 0.5f;
-	float leak = 0.01f; //For the Relu.
+	float eta;
+	float alpha;
+	float leak; //For the Relu.
 
 //Functions
 public:
 	SettingManager() = delete;
 	SettingManager(const std::string& setFile);
 
-	float GetEta(void) const { return eta; }
 	float GetAlpha(void) const { return alpha; }
+	unsigned GetBufferSize(void) const { return bufferSize; }
+	float GetEta(void) const { return eta; }
 	float GetLeak(void) const { return leak; }
+	bool GetSemiCasComma(void) const { return SemiCasComma; }
 
 private:
 	void InputSettings(const std::string& dataString);
 	void ReadLineAndClean(std::ifstream& dataStream, std::string& dataString);
+	bool Stob(const std::string& dataString) const;
 
 };

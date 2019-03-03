@@ -6,8 +6,8 @@
 
 int main() {
 	SettingManager Settings("Settings\\Settings.txt");
-	DataHandler input("Data\\inputDefault.txt");
-	DataHandler output("Data\\outputDefault.txt");
+	DataHandler input(Settings, "Data\\inputDefault.txt");
+	DataHandler output(Settings, "Data\\outputDefault.txt");
 	assert(input.GetBuffSize() == output.GetBuffSize());
 
 	Topology Top(3);

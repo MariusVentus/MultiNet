@@ -7,6 +7,42 @@ SettingManager::SettingManager(const std::string& setFile)
 	InputSettings(setFile);
 }
 
+void SettingManager::InputSettings(const std::string& dataString)
+{
+	std::ifstream inStream(dataString);
+	std::string line;
+
+	do {
+		line.clear();
+		ReadLineAndClean(inStream, line);
+		if (line == "[Eta]") {
+			ReadLineAndClean(inStream, line);
+			eta = std::stof(line);
+		}
+		else if (line == "[Alpha]") {
+			ReadLineAndClean(inStream, line);
+			alpha = std::stof(line);
+		}
+		else if (line == "[Leak]") {
+			ReadLineAndClean(inStream, line);
+			leak = std::stof(line);
+		}
+		else if (line == "[BufferSize]") {
+			ReadLineAndClean(inStream, line);
+			bufferSize = std::stoul(line);
+		}
+		else if (line == "[TreatSemicolonasComma]") {
+			ReadLineAndClean(inStream, line);
+			SemiCasComma = Stob(line);
+		}
+		else {
+			continue;
+		}
+
+	} while (!line.empty());
+
+}
+
 void SettingManager::ReadLineAndClean(std::ifstream& dataStream, std::string& dataString)
 {
 	do {
@@ -33,30 +69,15 @@ void SettingManager::ReadLineAndClean(std::ifstream& dataStream, std::string& da
 	} while (!dataStream.eof() && dataString.empty());
 }
 
-void SettingManager::InputSettings(const std::string& dataString)
+bool SettingManager::Stob(const std::string& dataString) const
 {
-	std::ifstream inStream(dataString);
-	std::string line;
-
-	do {
-		line.clear();
-		ReadLineAndClean(inStream, line);
-		if (line == "[Eta]") {
-			ReadLineAndClean(inStream, line);
-			eta = std::stof(line);
-		}
-		else if (line == "[Alpha]") {
-			ReadLineAndClean(inStream, line);
-			alpha = std::stof(line);
-		}
-		else if (line == "[Leak]") {
-			ReadLineAndClean(inStream, line);
-			leak = std::stof(line);
-		}
-		else {
-			continue;
-		}
-
-	} while (!line.empty());
-
+	if (dataString == "true" || dataString == "True") {
+		return true;
+	}
+	else if (dataString == "false" || dataString == "False") {
+		return false;
+	}
+	else {
+		return false;
+	}
 }

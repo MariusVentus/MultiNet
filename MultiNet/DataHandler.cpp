@@ -1,23 +1,24 @@
 #include "DataHandler.h"
 #include <sstream>
 
-DataHandler::DataHandler(const std::string & ioFile)
+DataHandler::DataHandler(const SettingManager& dhSet, const std::string & ioFile)
 	:
+	m_dhSet(dhSet),
 	inStream(ioFile)
 {
-	m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+	m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
 }
 
 void DataHandler::ReloadBuffer(void)
 {
 	dataBuffer.clear();
-	m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+	m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
 
 	if(m_EoF == true && dataBuffer.empty()){
 		m_EoFDelayed = m_EoF;
 		inStream.clear();
 		inStream.seekg(0, inStream.beg);
-		m_EoF = !LoadBuffer(dataBuffer, inStream, SettingManager::bufferSize);
+		m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
 	}
 }
 
@@ -55,7 +56,7 @@ void DataHandler::ReadLineAndClean(std::ifstream& dataStream, std::string & data
 		} while (MissingVals(dataString));
 
 		//SemiColons to Comma
-		if (SettingManager::SemiCasComma == true) {
+		if (m_dhSet.GetSemiCasComma() == true) {
 			while (dataString.find(";") != std::string::npos) {
 				dataString.replace(dataString.find(";"), 1, ",");
 			}

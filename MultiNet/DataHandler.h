@@ -13,10 +13,11 @@ private:
 	bool m_EoFDelayed = false;
 	std::ifstream inStream;
 	std::vector<std::vector<float>> dataBuffer;
+	SettingManager m_dhSet;
 
 //Functions
 public:
-	DataHandler(const std::string& ioFile);
+	DataHandler(const SettingManager& dhSet, const std::string& ioFile);
 
 	unsigned GetBuffSize(void) const { return dataBuffer.size(); }
 	bool GetEoF(void) const { return m_EoFDelayed; }
