@@ -12,8 +12,9 @@ int main() {
 
 	Topology Top(3);
 	Top.CreateMonoLayer(0, input.GetRowSize(), 1);
-	Top.CreateMonoLayer(1, 2, 3);
-	Top.CreateMonoLayer(2, output.GetRowSize(), 3);
+	Top.CreateMonoLayer(1, 5, 4);
+	//Top.CreateMixedLayer(1, 5);
+	Top.CreateMonoLayer(2, output.GetRowSize(), 1);
 	NeuralNet NN(Top, Settings);
 	std::cin.get();
 

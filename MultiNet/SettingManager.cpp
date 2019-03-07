@@ -66,6 +66,9 @@ void SettingManager::ReadLineAndClean(std::ifstream& dataStream, std::string& da
 		while (dataString.find(",") == 0) {
 			dataString.erase(dataString.find(","), 1);
 		}
+		if (dataString.find_last_of(",") == dataString.size() - 1 && !dataString.empty()) {
+			dataString.pop_back();
+		}
 	} while (!dataStream.eof() && dataString.empty());
 }
 
