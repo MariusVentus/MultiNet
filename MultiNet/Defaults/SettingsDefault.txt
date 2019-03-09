@@ -1,0 +1,15 @@
+;;Settings
+
+;;Data
+[Buffer Size]
+4
+[Treat Semicolon as Comma]
+true
+
+;;Learning Parameters
+[Eta]
+0.2
+[Alpha] 
+0.5
+[Leak]
+0.01

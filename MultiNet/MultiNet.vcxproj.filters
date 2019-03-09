@@ -19,6 +19,12 @@
     <Filter Include="Data">
       <UniqueIdentifier>{f2881fff-5d4f-4972-870f-8e22524c06cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Topology">
+      <UniqueIdentifier>{538e710a-96bd-40c2-a014-34271f2c226f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Defaults">
+      <UniqueIdentifier>{e8b1d55a-37d0-46fa-bd85-d5bf28ce72cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cortex.h">
@@ -70,14 +76,26 @@
     <Text Include="Settings\Settings.txt">
       <Filter>Settings</Filter>
     </Text>
-    <Text Include="Data\inputDefault.txt">
+    <Text Include="Topologies\Topology.txt">
+      <Filter>Topology</Filter>
+    </Text>
+    <Text Include="Data\input.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="Data\ioDefault.txt">
+    <Text Include="Data\output.txt">
       <Filter>Data</Filter>
     </Text>
-    <Text Include="Data\outputDefault.txt">
-      <Filter>Data</Filter>
+    <Text Include="Defaults\inputDefault.txt">
+      <Filter>Defaults</Filter>
+    </Text>
+    <Text Include="Defaults\outputDefault.txt">
+      <Filter>Defaults</Filter>
+    </Text>
+    <Text Include="Defaults\SettingsDefault.txt">
+      <Filter>Defaults</Filter>
+    </Text>
+    <Text Include="Defaults\TopologyDefault.txt">
+      <Filter>Defaults</Filter>
     </Text>
   </ItemGroup>
 </Project>

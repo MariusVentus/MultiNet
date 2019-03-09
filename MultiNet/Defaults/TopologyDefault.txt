@@ -1,0 +1,23 @@
+;;[Layer Type]
+;;Mono = Type, Count, Repeat
+;;Mixed = Count, Repeat
+;;Custom = Type,Count,Type,Count,Type, Count, Repeat
+;;Types include Bias, Linear, Sigmoid, Tanh, Relu, Gaussian. Bias neurons are automatically generated each layer, regardless if more are added.
+;;Input/Output can be set to count "Auto" which matches the first input and output respectively. Usually safest to leave Auto.
+;;Input and Ouput act like Monolayers, but should still be placed at the beginning and end of the Net respectively. All other layers can be placed, rearranged, or duplicated as needed. 
+;;Repeat is the number of times you want it to repeat. So Repeat 1 would mean you want it to repeat once, or two layers total. 
+
+[Input]
+Linear,Auto,0
+
+[Mono]
+Relu,5,3
+
+[Mixed]
+5,2
+
+[Custom]
+Sigmoid,2,Tanh,2,Gaussian,2,1
+
+[Output]
+Linear,Auto,0

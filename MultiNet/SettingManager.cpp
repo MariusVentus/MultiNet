@@ -47,25 +47,26 @@ void SettingManager::ReadLineAndClean(std::ifstream& dataStream, std::string& da
 {
 	do {
 		std::getline(dataStream, dataString);
-
 		//Remove Comments
 		if (dataString.find(";;") != std::string::npos) {
 			dataString.erase(dataString.find(";;"));
 		}
-
-		//Remove White Space, Empty New Lines, Leading and Double Commas.
+		//Remove White Space
 		while (dataString.find(" ") != std::string::npos) {
 			dataString.erase(dataString.find(" "), 1);
 		}
 		while (dataString.find("\t") != std::string::npos) {
 			dataString.erase(dataString.find("\t"), 1);
 		}
+		//Remove Double Commas
 		while (dataString.find(",,") != std::string::npos) {
 			dataString.erase(dataString.find(",,"), 1);
 		}
-		while (dataString.find(",") == 0) {
+		//Remove Leading Comma
+		if (dataString.find(",") == 0) {
 			dataString.erase(dataString.find(","), 1);
 		}
+		//Remove Trailing Comma
 		if (dataString.find_last_of(",") == dataString.size() - 1 && !dataString.empty()) {
 			dataString.pop_back();
 		}

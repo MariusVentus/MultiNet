@@ -6,15 +6,11 @@
 
 int main() {
 	SettingManager Settings("Settings\\Settings.txt");
-	DataHandler input(Settings, "Data\\inputDefault.txt");
-	DataHandler output(Settings, "Data\\outputDefault.txt");
+	DataHandler input(Settings, "Data\\input.txt");
+	DataHandler output(Settings, "Data\\output.txt");
 	assert(input.GetBuffSize() == output.GetBuffSize());
 
-	Topology Top(3);
-	Top.CreateMonoLayer(0, input.GetRowSize(), 1);
-	Top.CreateMonoLayer(1, 5, 4);
-	//Top.CreateMixedLayer(1, 5);
-	Top.CreateMonoLayer(2, output.GetRowSize(), 1);
+	Topology Top("Topologies\\Topology.txt", input.GetRowSize(), output.GetRowSize());
 	NeuralNet NN(Top, Settings);
 	std::cin.get();
 
