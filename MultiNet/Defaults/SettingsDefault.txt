@@ -3,7 +3,7 @@
 ;;Data
 [Buffer Size]
 4
-[Treat Semicolon as Comma]
+[Randomize Training Data]
 true
 
 ;;Learning Parameters

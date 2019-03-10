@@ -31,9 +31,9 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			bufferSize = std::stoul(line);
 		}
-		else if (line == "[TreatSemicolonasComma]") {
+		else if (line == "[RandomizeTrainingData]") {
 			ReadLineAndClean(inStream, line);
-			SemiCasComma = Stob(line);
+			randomizedTraining = Stob(line);
 		}
 		else {
 			continue;

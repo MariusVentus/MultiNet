@@ -50,31 +50,26 @@ bool DataHandler::MissingVals(const std::string & line)
 void DataHandler::ReadLineAndClean(std::ifstream& dataStream, std::string & dataString)
 {
 	do {
-		//Remove Question Marks
-		do {
-			std::getline(dataStream, dataString);
-		} while (MissingVals(dataString));
-
 		//SemiColons to Comma
-		if (m_dhSet.GetSemiCasComma() == true) {
-			while (dataString.find(";") != std::string::npos) {
-				dataString.replace(dataString.find(";"), 1, ",");
-			}
+		while (dataString.find(";") != std::string::npos) {
+			dataString.replace(dataString.find(";"), 1, ",");
 		}
-
-		//Remove White Space, Empty New Lines, Leading and Double Commas.
+		//Remove White Space
 		while (dataString.find(" ") != std::string::npos) {
 			dataString.erase(dataString.find(" "), 1);
 		}
 		while (dataString.find("\t") != std::string::npos) {
 			dataString.erase(dataString.find("\t"), 1);
 		}
+		//Remove Double Commas
 		while (dataString.find(",,") != std::string::npos) {
 			dataString.erase(dataString.find(",,"), 1);
 		}
-		while (dataString.find(",") == 0) {
+		//Remove Leading Comma
+		if (dataString.find(",") == 0) {
 			dataString.erase(dataString.find(","), 1);
 		}
+		//Remove Trailing Comma
 		if (dataString.find_last_of(",") == dataString.size() - 1 && !dataString.empty()) {
 			dataString.pop_back();
 		}

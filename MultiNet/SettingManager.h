@@ -21,7 +21,7 @@ public:
 private:
 	//Data
 	unsigned bufferSize;
-	bool SemiCasComma;
+	bool randomizedTraining;
 
 	//Learning
 	float eta;
@@ -37,7 +37,7 @@ public:
 	unsigned GetBufferSize(void) const { return bufferSize; }
 	float GetEta(void) const { return eta; }
 	float GetLeak(void) const { return leak; }
-	bool GetSemiCasComma(void) const { return SemiCasComma; }
+	bool GetRandTrainData(void) const { return randomizedTraining; }
 
 private:
 	void InputSettings(const std::string& dataString);
