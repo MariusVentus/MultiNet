@@ -37,19 +37,11 @@ bool DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstr
 	return true;
 }
 
-bool DataHandler::MissingVals(const std::string & line)
-{
-	if (line.find("?") != std::string::npos) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
 void DataHandler::ReadLineAndClean(std::ifstream& dataStream, std::string & dataString)
 {
 	do {
+		std::getline(dataStream, dataString);
+
 		//SemiColons to Comma
 		while (dataString.find(";") != std::string::npos) {
 			dataString.replace(dataString.find(";"), 1, ",");

@@ -2,6 +2,7 @@
 #include "Topology.h"
 #include "NeuralNet.h"
 #include "DataHandler.h"
+#include "RandHandler.h"
 #include <assert.h>
 
 int main() {
@@ -14,25 +15,27 @@ int main() {
 	NeuralNet NN(Top, Settings);
 	std::cin.get();
 
+	RandHandler rng;
 	bool keepTraining = true;
 	while (keepTraining) {
 		for (unsigned epochs = 0; epochs < 10; ++epochs) {
 			while (!input.GetEoF()) {
 				for (unsigned i = 0; i < input.GetBuffSize(); i++) {
 					assert(input.GetBuffSize() == output.GetBuffSize());
+					rng.GenNShuffle(input.GetBuffSize());
 					std::vector<float> resultVals;
 					//Feed
-					NN.FeedForward(input.GetRowX(i));
+					NN.FeedForward(input.GetRowX(rng.GetSelect(i)));
 					//Results
 					NN.GetResults(resultVals);
 					//Correct
-					NN.BackProp(output.GetRowX(i));
+					NN.BackProp(output.GetRowX(rng.GetSelect(i)));
 
 					//Display
 					std::cout << "\n";
 					std::cout << "Input: ";
 					for (unsigned j = 0; j < input.GetRowSize(); j++) {
-						std::cout << input.GetRowX(i)[j] << " ";
+						std::cout << input.GetRowX(rng.GetSelect(i))[j] << " ";
 					}
 					std::cout << "\n";
 
@@ -44,7 +47,7 @@ int main() {
 
 					std::cout << "Target: ";
 					for (unsigned j = 0; j < output.GetRowSize(); j++) {
-						std::cout << output.GetRowX(i)[j] << " ";
+						std::cout << output.GetRowX(rng.GetSelect(i))[j] << " ";
 					}
 					std::cout << "\n";
 				}
