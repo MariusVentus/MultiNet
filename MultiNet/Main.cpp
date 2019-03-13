@@ -18,11 +18,16 @@ int main() {
 	RandHandler rng;
 	bool keepTraining = true;
 	while (keepTraining) {
-		for (unsigned epochs = 0; epochs < 10; ++epochs) {
+		for (unsigned epochs = 0; epochs < 1; ++epochs) {
 			while (!input.GetEoF()) {
+				if (Settings.GetRandTrainData() == true) {
+					rng.GenNShuffle(input.GetBuffSize());
+				}
+				else {
+					rng.GenSelectArray(input.GetBuffSize());
+				}
 				for (unsigned i = 0; i < input.GetBuffSize(); i++) {
 					assert(input.GetBuffSize() == output.GetBuffSize());
-					rng.GenNShuffle(input.GetBuffSize());
 					std::vector<float> resultVals;
 					//Feed
 					NN.FeedForward(input.GetRowX(rng.GetSelect(i)));

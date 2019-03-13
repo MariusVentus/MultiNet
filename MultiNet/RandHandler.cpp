@@ -7,6 +7,14 @@ RandHandler::RandHandler()
 {
 }
 
+void RandHandler::GenSelectArray(const unsigned& arrSize)
+{
+	selectArray.clear();
+	for (unsigned i = 0; i < arrSize; i++) {
+		selectArray.emplace_back(i);
+	}
+}
+
 void RandHandler::GenNShuffle(const unsigned& buffSize)
 {
 	std::uniform_int_distribution<unsigned> rDist(0, buffSize - 1);
@@ -25,13 +33,5 @@ void RandHandler::GenNShuffle(const unsigned& buffSize)
 		while (lhs == rhs) {
 			rhs = rDist(rng);
 		}
-	}
-}
-
-void RandHandler::GenSelectArray(const unsigned& arrSize)
-{
-	selectArray.clear();
-	for (unsigned i = 0; i < arrSize; i++) {
-		selectArray.emplace_back(i);
 	}
 }
