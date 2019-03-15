@@ -17,6 +17,7 @@ private:
 
 //Functions
 public:
+	DataHandler() = delete;
 	DataHandler(const SettingManager& dhSet, const std::string& ioFile);
 
 	unsigned GetBuffSize(void) const { return dataBuffer.size(); }
