@@ -13,7 +13,7 @@ public:
 
 //Public Functions
 	Cortex(const std::string& settingFile, const std::string& topologyFile, const std::string& inputFile, const std::string& outputFile);
-	void Train(void);
+	void Train(const unsigned& epochCount);
 private:
 //Private Objects
 	SettingManager m_Settings;

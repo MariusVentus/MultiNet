@@ -10,7 +10,10 @@ int main() {
 
 	bool keepTraining = true;
 	while (keepTraining) {
-		Brain.Train();
+		std::cout << "How many Epochs?\n";
+		unsigned bleh = 0;
+		std::cin >> bleh;
+		Brain.Train(bleh);
 		std::cin.get();
 	}
 

@@ -1,4 +1,5 @@
 #include "Cortex.h"
+#include "TimeKeeper.h"
 #include <assert.h>
 #include <iostream>
 
@@ -15,9 +16,11 @@ Cortex::Cortex(const std::string& settingFile, const std::string& topologyFile, 
 
 }
 
-void Cortex::Train(void)
+void Cortex::Train(const unsigned& epochCount)
 {
-	for (unsigned epochs = 0; epochs < 1; ++epochs) {
+	TimeKeeper TrainTime;
+	for (unsigned epochs = 0; epochs < epochCount; ++epochs) {
+		TimeKeeper EpochTime;
 		while (!m_Input.GetEoF()) {
 			if (m_Settings.GetRandTrainData() == true) {
 				m_rng.GenNShuffle(m_Input.GetBuffSize());
@@ -58,6 +61,10 @@ void Cortex::Train(void)
 			m_Input.ReloadBuffer();
 			m_Output.ReloadBuffer();
 		}
+		std::cout << "Epoch Time: " << EpochTime.Mark() << "s \n";
+		//std::cin.get(); //Test Pause - Single Epoch
 		m_Input.ResetEoF();
 	}
+	std::cout << "\nTraining Time: " << TrainTime.Mark() << "s \n";
+	std::cout << "\n";
 }
