@@ -1,22 +1,20 @@
 #include "Neuron.h"
 #include <cmath>
 #include <iostream>
-#include <random>
 
-Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned myIndex, unsigned myType)
+Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned numOutputs, unsigned myIndex, unsigned myType)
 	:
-	m_neuronSet(nSet)
+	m_neuronSet(nSet),
+	m_myType(myType),
+	m_myIndex(myIndex)
 {
 	std::random_device rd;
 	std::mt19937 rng(rd());
-	std::normal_distribution<float> nDist(0, 1);
 
 	for (unsigned cnxn = 0; cnxn < numInputs; ++cnxn) {
 		m_inputWeights.push_back(Synapse());
-		m_inputWeights.back().weight = nDist(rng);
+		m_inputWeights.back().weight = RandomWeight(rng, numInputs, numOutputs);
 	}
-	m_myIndex = myIndex;
-	m_myType = myType;
 	std::cout << "N" << m_myType << " ";
 }
 
@@ -63,6 +61,32 @@ float Neuron::SumDOW(const Layer& nextLayer) const
 		sum += nextLayer[n].m_inputWeights[m_myIndex].weight*nextLayer[n].m_gradient;
 	}
 	return sum;
+}
+
+float Neuron::RandomWeight(std::mt19937& rng, const unsigned& numInputs, const unsigned& numOutputs)
+{
+	std::normal_distribution<float> nDist(0, 1);
+
+	switch (m_neuronSet.GetInit()) {
+	case SettingManager::Initialization::Normal:
+		return nDist(rng);
+	case SettingManager::Initialization::XavierSimple:
+		if (m_myType == 4) {
+			return nDist(rng)*(sqrt(2.0f / float(numInputs)));
+		}
+		else {
+			return nDist(rng)*(sqrt(1.0f / float(numInputs)));
+		}
+	case SettingManager::Initialization::XavierFull:
+		if (m_myType == 4) {
+			return nDist(rng)*(sqrt(4.0f / float(numInputs + numOutputs)));
+		}
+		else {
+			return nDist(rng)*(sqrt(2.0f / float(numInputs + numOutputs)));
+		}
+	default:
+		return nDist(rng);
+	}
 }
 
 float Neuron::TransferFunction(unsigned inType, float x)

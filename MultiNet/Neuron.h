@@ -1,5 +1,6 @@
 #pragma once
 #include "SettingManager.h"
+#include <random>
 #include <vector>
 
 /*
@@ -22,7 +23,7 @@ public:
 		float deltaWeight = 0.0f;
 	};
 //Public Functions
-	Neuron(const SettingManager& nSet, unsigned numInputs, unsigned myIndex, unsigned myType);
+	Neuron(const SettingManager& nSet, unsigned numInputs, unsigned numOutputs, unsigned myIndex, unsigned myType);
 	void CalcHiddenGradients(const Layer& nextLayer);
 	void CalcOutputGradients(float targetVal);
 	void FeedForward(const Layer& prevLayer);
@@ -48,6 +49,7 @@ private:
 
 	//Randomization
 	static float RandomWeightStandard(void) { return 4.0f; } //Rolled a Die 
+	float RandomWeight(std::mt19937& rng, const unsigned& numInputs, const unsigned& numOutputs);
 
 	//Transfer Functions
 	float TransferFunction(unsigned inType, float x);

@@ -2,9 +2,8 @@
 #include <string>
 
 class SettingManager {
+//Variables
 public:
-//Placing these as temporary settings until a Reader is setup, and planning for features. 
-
 	//Clipping
 	enum class Clipping { None, HardClip, L2Clip };
 	static constexpr Clipping netC = Clipping::None;
@@ -12,7 +11,6 @@ public:
 
 	//Initialization
 	enum class Initialization { Normal, XavierSimple, XavierFull};
-	static constexpr Initialization netI = Initialization::Normal;
 
 	//Loss
 	enum class Loss { MeanSquared, LogLoss };
@@ -22,6 +20,9 @@ private:
 	//Data
 	unsigned bufferSize;
 	bool randomizedTraining;
+
+	//Initialization
+	Initialization netI;
 
 	//Learning
 	float eta;
@@ -36,6 +37,7 @@ public:
 	float GetAlpha(void) const { return alpha; }
 	unsigned GetBufferSize(void) const { return bufferSize; }
 	float GetEta(void) const { return eta; }
+	Initialization GetInit(void) const { return netI; }
 	float GetLeak(void) const { return leak; }
 	bool GetRandTrainData(void) const { return randomizedTraining; }
 

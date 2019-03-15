@@ -6,9 +6,14 @@
 [Randomize Training Data]
 true
 
+;;Initialization
+;;Normal, XavierSimple, or XavierFull
+[Initialization]
+Normal
+
 ;;Learning Parameters
 [Eta]
-0.2
+0.3
 [Alpha] 
 0.5
 [Leak]

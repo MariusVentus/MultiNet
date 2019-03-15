@@ -35,6 +35,18 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			randomizedTraining = Stob(line);
 		}
+		else if (line == "[Initialization]") {
+			ReadLineAndClean(inStream, line);
+			if (line == "Normal") {
+				netI = Initialization::Normal;
+			}
+			else if (line == "XavierSimple") {
+				netI = Initialization::XavierSimple;
+			}
+			else if (line == "XavierFull") {
+				netI = Initialization::XavierFull;
+			}
+		}
 		else {
 			continue;
 		}
