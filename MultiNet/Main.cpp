@@ -14,7 +14,10 @@ int main() {
 		unsigned bleh = 0;
 		std::cin >> bleh;
 		Brain.Train(bleh);
+		std::cout << "Testing.\n";
+		std::cin.ignore();
 		std::cin.get();
+		Brain.Test();
 	}
 
 	std::cin.ignore();

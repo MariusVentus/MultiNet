@@ -1,14 +1,41 @@
 #include "DataHandler.h"
+#include <cmath>
 #include <sstream>
 
 DataHandler::DataHandler(const SettingManager& dhSet, const std::string & ioFile)
 	:
 	m_dhSet(dhSet),
-	inStream(ioFile)
+	inStream(ioFile),
+	m_maxInputCount(MaxInputCount()),
+	m_TrainingDataSize(static_cast<unsigned>(std::round(m_maxInputCount*((100.0f - m_dhSet.GetReservePercentage()) / 100.0f))))
 {
-	m_maxInputCount = MaxInputCount();
-	m_TrainingDataSize = static_cast<unsigned>(std::round(m_maxInputCount*((100.0f - m_dhSet.GetReservePercentage()) / 100.0f)));
 	m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
+}
+
+bool DataHandler::LoadTestBuff(void)
+{
+	std::string dataTemp;
+	
+	for (unsigned nLines = 0; nLines < m_dhSet.GetBufferSize(); ++nLines) {
+		dataTemp.clear();
+		ReadLineAndClean(inStream, dataTemp);
+		if (dataTemp.empty()) {
+			return false;
+		}
+		dataBuffer.emplace_back(SplitIntoFloatTokens(dataTemp));
+	}
+	return true;
+}
+
+void DataHandler::PrepTest(void)
+{
+	std::string dataTemp;
+
+	ResetDh();
+
+	for (; m_LoadedCount < m_TrainingDataSize; ++m_LoadedCount) {
+		ReadLineAndClean(inStream, dataTemp);
+	}
 }
 
 void DataHandler::ReloadBuffer(void)
@@ -22,6 +49,26 @@ void DataHandler::ReloadBuffer(void)
 		inStream.seekg(0, inStream.beg);
 		m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
 	}
+}
+
+void DataHandler::ReloadTestBuffer(void)
+{
+	dataBuffer.clear();
+	m_EoF = !LoadTestBuff();
+
+	if (m_EoF == true && dataBuffer.empty()) {
+		m_EoFDelayed = m_EoF;
+	}
+}
+
+void DataHandler::ResetDh(void)
+{
+	dataBuffer.clear();
+	inStream.clear();
+	inStream.seekg(0, inStream.beg);
+	ResetLoadedCount();
+	m_EoF = false;
+	ResetEoF();
 }
 
 bool DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream & dataStream, const unsigned bufferSize)

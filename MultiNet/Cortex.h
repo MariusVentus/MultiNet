@@ -14,6 +14,7 @@ public:
 //Public Functions
 	Cortex(const std::string& settingFile, const std::string& topologyFile, const std::string& inputFile, const std::string& outputFile);
 	void Train(const unsigned& epochMax);
+	void Test(void);
 
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 private:
@@ -28,5 +29,6 @@ private:
 //Private Variables
 	unsigned m_TrainingDataSize;
 //Private Functions
+	void DisplayTesting(unsigned buffRow, const std::vector<float>& inResultVals) const;
 	void DisplayTraining(unsigned buffRow, const std::vector<float>& inResultVals) const;
 };

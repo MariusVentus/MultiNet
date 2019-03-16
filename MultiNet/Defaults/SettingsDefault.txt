@@ -5,7 +5,7 @@
 4
 [Randomize Training Data]
 true
-[Reserve Percentage]
+[Reserve Percentage] ;;Never reserve 100%. It needds something to train on. 
 25
 
 ;;Initialization

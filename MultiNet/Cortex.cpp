@@ -22,7 +22,6 @@ void Cortex::Train(const unsigned& epochMax)
 	TimeKeeper TrainTime;
 	for (unsigned epochs = 0; epochs < epochMax; ++epochs) {
 		TimeKeeper EpochTime;
-		unsigned dataCount = 0;
 		//Run Epoch
 		while (!m_Input.GetEoF()) {
 
@@ -55,6 +54,64 @@ void Cortex::Train(const unsigned& epochMax)
 		m_Output.ResetLoadedCount();
 	}
 	std::cout << "\nTraining Time: " << TrainTime.Mark() << "s \n";
+	std::cout << "\n";
+}
+
+void Cortex::Test(void)
+{
+	if (m_Input.GetMaxInputs() - m_TrainingDataSize) {
+		TimeKeeper TestTime;
+		//Run Test
+		m_Input.PrepTest();
+		m_Output.PrepTest();
+		m_Input.LoadTestBuff();
+		m_Output.LoadTestBuff();
+		while (!m_Input.GetEoF()) {
+			//Run Buffer
+			for (unsigned i = 0; i < m_Input.GetBuffSize(); i++) {
+				assert(m_Input.GetBuffSize() == m_Output.GetBuffSize());
+				std::vector<float> resultVals;
+				//Feed
+				m_NN.FeedForward(m_Input.GetRowX(i));
+				//Results
+				m_NN.GetResults(resultVals);
+				//Display
+				DisplayTesting(i, resultVals);
+			}
+			m_Input.ReloadTestBuffer();
+			m_Output.ReloadTestBuffer();
+		}
+		std::cout << "Test Time: " << TestTime.Mark() << "s \n";
+
+		m_Input.ResetEoF();
+	}
+	else {
+		std::cout << "Nothing to Test on. \n";
+	}
+	m_Input.ResetDh();
+	m_Output.ResetDh();
+}
+
+void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResultVals) const
+{
+	//Display
+	std::cout << "\n";
+	std::cout << "Input: ";
+	for (unsigned j = 0; j < m_Input.GetRowSize(); j++) {
+		std::cout << m_Input.GetRowX(buffRow)[j] << " ";
+	}
+	std::cout << "\n";
+
+	std::cout << "Output: ";
+	for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+		std::cout << inResultVals[j] << " ";
+	}
+	std::cout << "\n";
+
+	std::cout << "Target: ";
+	for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+		std::cout << m_Output.GetRowX(buffRow)[j] << " ";
+	}
 	std::cout << "\n";
 }
 

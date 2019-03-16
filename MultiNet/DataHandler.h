@@ -11,12 +11,12 @@ public:
 private:
 	bool m_EoF = false;
 	bool m_EoFDelayed = false;
+	SettingManager m_dhSet;
 	std::ifstream inStream;
 	std::vector<std::vector<float>> dataBuffer;
-	SettingManager m_dhSet;
 	unsigned m_LoadedCount = 0;
-	unsigned m_maxInputCount;
-	unsigned m_TrainingDataSize;
+	const unsigned m_maxInputCount;
+	const unsigned m_TrainingDataSize;
 
 
 //Functions
@@ -31,7 +31,11 @@ public:
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 
+	bool LoadTestBuff(void);
+	void PrepTest(void);
 	void ReloadBuffer(void);
+	void ReloadTestBuffer(void);
+	void ResetDh (void);
 	void ResetEoF(void) { m_EoFDelayed = false; }
 	void ResetLoadedCount(void) { m_LoadedCount = 0; }
 
