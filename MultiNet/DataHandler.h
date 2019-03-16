@@ -14,7 +14,10 @@ private:
 	std::ifstream inStream;
 	std::vector<std::vector<float>> dataBuffer;
 	SettingManager m_dhSet;
+	unsigned m_LoadedCount = 0;
 	unsigned m_maxInputCount;
+	unsigned m_TrainingDataSize;
+
 
 //Functions
 public:
@@ -26,9 +29,11 @@ public:
 	unsigned GetMaxInputs(void) const { return m_maxInputCount; }
 	unsigned GetRowSize(void) const { return dataBuffer[0].size(); }
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
+	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 
 	void ReloadBuffer(void);
 	void ResetEoF(void) { m_EoFDelayed = false; }
+	void ResetLoadedCount(void) { m_LoadedCount = 0; }
 
 private:
 	//Returns true if it can continue, false if at end of file. 

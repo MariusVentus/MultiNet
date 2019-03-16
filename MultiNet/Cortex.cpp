@@ -14,8 +14,7 @@ Cortex::Cortex(const std::string& settingFile, const std::string& topologyFile, 
 {
 	assert(m_Input.GetBuffSize() == m_Output.GetBuffSize());
 	m_TrainingDataSize = static_cast<unsigned>(std::round(m_Input.GetMaxInputs()*((100.0f - m_Settings.GetReservePercentage()) / 100.0f)));
-	std::cout << "\nTraining on " << m_TrainingDataSize << " sets, reserving " << m_Input.GetMaxInputs() - m_TrainingDataSize << " sets. \n";
-	std::cin.get();
+	std::cout << "\nTraining on " << m_TrainingDataSize << " sets, reserving " << m_Input.GetMaxInputs() - m_TrainingDataSize << " sets. \n\n";
 }
 
 void Cortex::Train(const unsigned& epochMax)
@@ -52,6 +51,8 @@ void Cortex::Train(const unsigned& epochMax)
 		std::cout << "Epoch Time: " << EpochTime.Mark() << "s \n";
 		//std::cin.get(); //Test Pause - Single Epoch
 		m_Input.ResetEoF();
+		m_Input.ResetLoadedCount();
+		m_Output.ResetLoadedCount();
 	}
 	std::cout << "\nTraining Time: " << TrainTime.Mark() << "s \n";
 	std::cout << "\n";

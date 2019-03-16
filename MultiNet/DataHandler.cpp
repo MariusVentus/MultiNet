@@ -7,6 +7,7 @@ DataHandler::DataHandler(const SettingManager& dhSet, const std::string & ioFile
 	inStream(ioFile)
 {
 	m_maxInputCount = MaxInputCount();
+	m_TrainingDataSize = static_cast<unsigned>(std::round(m_maxInputCount*((100.0f - m_dhSet.GetReservePercentage()) / 100.0f)));
 	m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
 }
 
@@ -27,13 +28,16 @@ bool DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstr
 {
 	std::string dataTemp;
 
-	for (unsigned nLines = 0; nLines < bufferSize; ++nLines) {
+	for (unsigned nLines = 0; nLines < bufferSize && m_LoadedCount < m_TrainingDataSize; ++nLines, ++m_LoadedCount) {
 		dataTemp.clear();
 		ReadLineAndClean(dataStream, dataTemp);
 		if (dataTemp.empty()) {
 			return false;
 		}
 		buffer.emplace_back(SplitIntoFloatTokens(dataTemp));
+	}
+	if (m_LoadedCount >= m_TrainingDataSize) {
+		return false;
 	}
 	return true;
 }
