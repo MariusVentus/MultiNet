@@ -5,11 +5,13 @@
 4
 [Randomize Training Data]
 true
+[Reserve Percentage]
+25
 
 ;;Initialization
 ;;Normal, XavierSimple, or XavierFull
 [Initialization]
-Normal
+XavierFull
 
 ;;Learning Parameters
 [Eta]

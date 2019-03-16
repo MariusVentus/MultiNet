@@ -20,6 +20,7 @@ private:
 	//Data
 	unsigned bufferSize;
 	bool randomizedTraining;
+	float reservePercentage;
 
 	//Initialization
 	Initialization netI;
@@ -40,6 +41,7 @@ public:
 	Initialization GetInit(void) const { return netI; }
 	float GetLeak(void) const { return leak; }
 	bool GetRandTrainData(void) const { return randomizedTraining; }
+	float GetReservePercentage(void) const { return reservePercentage; }
 
 private:
 	void InputSettings(const std::string& dataString);

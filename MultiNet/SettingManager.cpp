@@ -47,6 +47,16 @@ void SettingManager::InputSettings(const std::string& dataString)
 				netI = Initialization::XavierFull;
 			}
 		}
+		else if (line == "[ReservePercentage]") {
+			ReadLineAndClean(inStream, line);
+			reservePercentage = std::stof(line);
+			if (reservePercentage > 100.0f) {
+				reservePercentage = 100.0f;
+			}
+			else if (reservePercentage < 0.0f) {
+				reservePercentage = 0.0f;
+			}
+		}
 		else {
 			continue;
 		}

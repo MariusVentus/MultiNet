@@ -17,21 +17,23 @@ void RandHandler::GenSelectArray(const unsigned& arrSize)
 
 void RandHandler::GenNShuffle(const unsigned& buffSize)
 {
-	std::uniform_int_distribution<unsigned> rDist(0, buffSize - 1);
-	unsigned lhs = rDist(rng);
-	unsigned rhs = rDist(rng);
-	while (lhs == rhs) {
-		rhs = rDist(rng);
-	}
-
 	GenSelectArray(buffSize);
 
-	for (unsigned nSwap = 0; nSwap < buffSize; nSwap++) {
-		std::swap(selectArray[lhs], selectArray[rhs]);
-		lhs = rDist(rng);
-		rhs = rDist(rng);
+	if (buffSize > 1) {
+		std::uniform_int_distribution<unsigned> rDist(0, buffSize - 1);
+		unsigned lhs = rDist(rng);
+		unsigned rhs = rDist(rng);
 		while (lhs == rhs) {
 			rhs = rDist(rng);
+		}
+
+		for (unsigned nSwap = 0; nSwap < buffSize; nSwap++) {
+			std::swap(selectArray[lhs], selectArray[rhs]);
+			lhs = rDist(rng);
+			rhs = rDist(rng);
+			while (lhs == rhs) {
+				rhs = rDist(rng);
+			}
 		}
 	}
 }

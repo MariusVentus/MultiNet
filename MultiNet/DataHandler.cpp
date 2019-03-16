@@ -6,6 +6,7 @@ DataHandler::DataHandler(const SettingManager& dhSet, const std::string & ioFile
 	m_dhSet(dhSet),
 	inStream(ioFile)
 {
+	m_maxInputCount = MaxInputCount();
 	m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
 }
 
@@ -35,6 +36,26 @@ bool DataHandler::LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstr
 		buffer.emplace_back(SplitIntoFloatTokens(dataTemp));
 	}
 	return true;
+}
+
+unsigned DataHandler::MaxInputCount(void)
+{
+	unsigned maxInputCount = 0;
+	std::string dataTemp;
+
+	inStream.clear();
+	inStream.seekg(0, inStream.beg);
+	do {
+		dataTemp.clear();
+		ReadLineAndClean(inStream, dataTemp);
+		if (!dataTemp.empty()) {
+			maxInputCount++;
+		}
+	} while (!dataTemp.empty());
+	inStream.clear();
+	inStream.seekg(0, inStream.beg);
+
+	return maxInputCount;
 }
 
 void DataHandler::ReadLineAndClean(std::ifstream& dataStream, std::string & dataString)

@@ -13,7 +13,9 @@ public:
 
 //Public Functions
 	Cortex(const std::string& settingFile, const std::string& topologyFile, const std::string& inputFile, const std::string& outputFile);
-	void Train(const unsigned& epochCount);
+	void Train(const unsigned& epochMax);
+
+	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 private:
 //Private Objects
 	SettingManager m_Settings;
@@ -24,5 +26,7 @@ private:
 	RandHandler m_rng;
 
 //Private Variables
+	unsigned m_TrainingDataSize;
 //Private Functions
+	void DisplayTraining(unsigned buffRow, const std::vector<float>& inResultVals) const;
 };
