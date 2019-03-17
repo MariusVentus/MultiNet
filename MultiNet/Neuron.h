@@ -27,6 +27,7 @@ public:
 	void CalcHiddenGradients(const Layer& nextLayer);
 	void CalcOutputGradients(float targetVal);
 	void FeedForward(const Layer& prevLayer);
+	void NormClipping(const float& inNorm);
 	void UpdateInputWeights(Layer& prevLayer);
 
 	float GetGradients(void) const { return m_gradient; }
@@ -45,6 +46,7 @@ private:
 	SettingManager m_neuronSet;
 
 //Private Functions
+	void HardClipping(void);
 	float SumDOW(const Layer& nextLayer) const; //Sum of Derivatives of Weights.
 
 	//Randomization

@@ -22,12 +22,14 @@ void Neuron::CalcHiddenGradients(const Layer& nextLayer)
 {
 	float dow = SumDOW(nextLayer);
 	m_gradient = dow*Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	HardClipping();
 }
 
 void Neuron::CalcOutputGradients(float targetVal)
 {
 	float delta = targetVal - m_outputVal;
 	m_gradient = delta * Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	HardClipping();
 }
 
 void Neuron::FeedForward(const Layer& prevLayer)
@@ -41,6 +43,13 @@ void Neuron::FeedForward(const Layer& prevLayer)
 	m_outputVal = Neuron::TransferFunction(m_myType, sum);
 }
 
+void Neuron::NormClipping(const float& inNorm)
+{
+	if (inNorm != 0.0f && inNorm > m_neuronSet.GetClipThreshold()) {
+		m_gradient = m_gradient*(m_neuronSet.GetClipThreshold() / inNorm);
+	}
+}
+
 void Neuron::UpdateInputWeights(Layer& prevLayer)
 {
 	for (unsigned n = 0; n < prevLayer.size(); n++) {
@@ -51,6 +60,18 @@ void Neuron::UpdateInputWeights(Layer& prevLayer)
 
 		m_inputWeights[n].deltaWeight = newDeltaWeight;
 		m_inputWeights[n].weight += newDeltaWeight;
+	}
+}
+
+void Neuron::HardClipping(void)
+{
+	if (m_neuronSet.GetClipping() == SettingManager::Clipping::HardClip) {
+		if (m_gradient > m_neuronSet.GetClipThreshold()) {
+			m_gradient = m_neuronSet.GetClipThreshold();
+		}
+		else if (m_gradient < -m_neuronSet.GetClipThreshold()) {
+			m_gradient = -m_neuronSet.GetClipThreshold();
+		}
 	}
 }
 

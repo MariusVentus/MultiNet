@@ -55,16 +55,42 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 	m_error = sqrt(m_error);
 
 	//Output Gradients
+	float normL2 = 0.0f;
 	for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
 		outputLayer[n].CalcOutputGradients(targetVals[n]);
+		//Output l2 Norm Clipping
+		if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
+			normL2 += (outputLayer[n].GetGradients()*outputLayer[n].GetGradients());
+		}
 	}
+	//Output l2 Norm Clipping Continued
+	if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
+		normL2 = sqrt(normL2);
+		for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+			outputLayer[n].NormClipping(normL2);
+		}
+	}
+
 	//Hidden Gradients
 	for (unsigned layerNum = unsigned(m_layers.size()) - 2; layerNum > 0; layerNum--) {
 		Layer& hiddenLayer = m_layers[layerNum];
 		Layer& nextLayer = m_layers[layerNum + 1];
+		normL2 = 0.0f;
+
 		//Last Neuron in a Layer is always Bias. Slight optimization with -1. 
 		for (unsigned n = 0; n < hiddenLayer.size() - 1; ++n) {
 			hiddenLayer[n].CalcHiddenGradients(nextLayer);
+			if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
+				//Hidden l2 Norm Clipping
+				normL2 += (hiddenLayer[n].GetGradients()*hiddenLayer[n].GetGradients());
+			}
+		}
+		//Hidden l2 Norm Clipping Continued
+		if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
+			normL2 = sqrt(normL2);
+			for (unsigned n = 0; n < hiddenLayer.size(); ++n) {
+				hiddenLayer[n].NormClipping(normL2);
+			}
 		}
 	}
 	//Update Weights

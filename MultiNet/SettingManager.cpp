@@ -47,11 +47,25 @@ void SettingManager::InputSettings(const std::string& dataString)
 				netI = Initialization::XavierFull;
 			}
 		}
+		else if (line == "[GradientClipping]") {
+			ReadLineAndClean(inStream, line);
+			if (line == "None") {
+				netC = Clipping::None;
+			}
+			else if (line == "Hard") {
+				netC = Clipping::HardClip;
+			}
+			else if (line == "L2") {
+				netC = Clipping::L2Clip;
+			}
+			ReadLineAndClean(inStream, line);
+			clipThreshold = std::stof(line);
+		}
 		else if (line == "[ReservePercentage]") {
 			ReadLineAndClean(inStream, line);
 			reservePercentage = std::stof(line);
-			if (reservePercentage > 100.0f) {
-				reservePercentage = 100.0f;
+			if (reservePercentage > 50.0f) {
+				reservePercentage = 50.0f;
 			}
 			else if (reservePercentage < 0.0f) {
 				reservePercentage = 0.0f;

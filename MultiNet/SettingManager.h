@@ -6,8 +6,6 @@ class SettingManager {
 public:
 	//Clipping
 	enum class Clipping { None, HardClip, L2Clip };
-	static constexpr Clipping netC = Clipping::None;
-	static constexpr float clipThreshold = 1.0f;
 
 	//Initialization
 	enum class Initialization { Normal, XavierSimple, XavierFull};
@@ -21,6 +19,10 @@ private:
 	unsigned bufferSize;
 	bool randomizedTraining;
 	float reservePercentage;
+
+	//Gradient Clipping
+	Clipping netC = Clipping::None;
+	float clipThreshold;
 
 	//Initialization
 	Initialization netI;
@@ -37,6 +39,8 @@ public:
 
 	float GetAlpha(void) const { return alpha; }
 	unsigned GetBufferSize(void) const { return bufferSize; }
+	Clipping GetClipping(void) const { return netC; }
+	float GetClipThreshold(void) const { return clipThreshold; }
 	float GetEta(void) const { return eta; }
 	Initialization GetInit(void) const { return netI; }
 	float GetLeak(void) const { return leak; }
