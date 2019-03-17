@@ -1,4 +1,5 @@
 #include "Neuron.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
@@ -21,14 +22,26 @@ Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned numOutpu
 void Neuron::CalcHiddenGradients(const Layer& nextLayer)
 {
 	float dow = SumDOW(nextLayer);
-	m_gradient = dow*Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	if (m_myType != 99) {
+		m_gradient = dow*Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	}
+	else {
+		//SoftMax
+		m_gradient = dow*m_outputVal*(1.0f - m_outputVal);
+	}
 	HardClipping();
 }
 
 void Neuron::CalcOutputGradients(float targetVal)
 {
 	float delta = targetVal - m_outputVal;
-	m_gradient = delta * Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	if (m_myType != 99) {
+		m_gradient = delta * Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	}
+	else {
+		//SoftMax
+		m_gradient = delta * m_outputVal*(1.0f - m_outputVal);
+	}
 	HardClipping();
 }
 
@@ -41,6 +54,40 @@ void Neuron::FeedForward(const Layer& prevLayer)
 	}
 	m_inputVals = sum;
 	m_outputVal = Neuron::TransferFunction(m_myType, sum);
+}
+
+void Neuron::FeedForwardSM(const Layer& prevLayer, const Layer& currentLayer)
+{
+	m_smInputs.clear();
+	if (m_myIndex != 0) {
+		m_inputVals = currentLayer[0].GetsmInputs(m_myIndex);
+		m_smSum = currentLayer[0].GetsmSum();
+		m_outputVal = m_inputVals / m_smSum;
+	}
+	else {
+		float sum = 0.0f;
+		float smMod = 0.0f;
+		//Calculate SoftMax Mod
+		for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
+			sum = 0.0f;
+			for (unsigned n = 0; n < prevLayer.size(); ++n) {
+				sum += prevLayer[n].GetOutputVal() * currentLayer[clCount].m_inputWeights[n].weight;
+			}
+			smMod = std::max(smMod, sum);
+		}
+		//Calculate Outputs
+		m_smSum = 0.0f;
+		for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
+			sum = 0.0f;
+			for (unsigned n = 0; n < prevLayer.size(); ++n) {
+				sum += prevLayer[n].GetOutputVal() * currentLayer[clCount].m_inputWeights[n].weight;
+			}
+			m_smInputs.push_back(exp(sum - smMod));
+			m_smSum += exp(sum - smMod);
+		}
+		m_inputVals = m_smInputs[m_myIndex];
+		m_outputVal = m_inputVals / m_smSum;
+	}
 }
 
 void Neuron::NormClipping(const float& inNorm)

@@ -11,6 +11,8 @@ Sigmoidal = 2
 Tanh = 3
 Leaky Relu = 4
 Gaussian = 5
+
+SoftMax = 99
 */
 
 class Neuron {
@@ -27,6 +29,7 @@ public:
 	void CalcHiddenGradients(const Layer& nextLayer);
 	void CalcOutputGradients(float targetVal);
 	void FeedForward(const Layer& prevLayer);
+	void FeedForwardSM(const Layer& prevLayer, const Layer& currentLayer);
 	void NormClipping(const float& inNorm);
 	void UpdateInputWeights(Layer& prevLayer);
 
@@ -34,16 +37,21 @@ public:
 	unsigned GetMyType(void) const { return m_myType; }
 	float GetOutputVal(void) const { return m_outputVal; }
 	void SetOutputVal(float val) { m_outputVal = val; }
+	float GetsmSum(void) const { return m_smSum; }
+	float GetsmInputs(unsigned indexNum) const { return m_smInputs[indexNum]; }
 
 private:
 //Variables
-	std::vector<Synapse> m_inputWeights;
-	float m_gradient = 0.0f;
-	unsigned m_myIndex;
-	unsigned m_myType;
-	float m_outputVal = 0.0f;
-	float m_inputVals = 0.0f;
 	SettingManager m_neuronSet;
+	std::vector<Synapse> m_inputWeights;
+	std::vector<float> m_smInputs;
+	unsigned m_myType;
+	unsigned m_myIndex;
+	float m_gradient = 0.0f;
+	float m_inputVals = 0.0f;
+	float m_outputVal = 0.0f;
+	float m_smSum = 0.0f;
+
 
 //Private Functions
 	void HardClipping(void);

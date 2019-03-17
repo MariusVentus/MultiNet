@@ -36,8 +36,17 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 	//Start from one, as the Input Layer does not need to be Fed.
 	for (unsigned layerNum = 1; layerNum < m_layers.size(); ++layerNum) {
 		Layer& prevLayer = m_layers[layerNum - 1];
-		for (unsigned n = 0; n < m_layers[layerNum].size() - 1; ++n) {
-			m_layers[layerNum][n].FeedForward(prevLayer);
+		//Normal or SoftMax Layer
+		if (m_layers[layerNum][0].GetMyType() != 99) {
+			for (unsigned n = 0; n < m_layers[layerNum].size() - 1; ++n) {
+				m_layers[layerNum][n].FeedForward(prevLayer);
+			}
+		}
+		else {
+			Layer& currentLayer = m_layers[layerNum];
+			for (unsigned n = 0; n < m_layers[layerNum].size() - 1; ++n) {
+				m_layers[layerNum][n].FeedForwardSM(prevLayer, currentLayer);
+			}
 		}
 	}
 }

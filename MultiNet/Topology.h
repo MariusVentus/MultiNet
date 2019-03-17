@@ -11,6 +11,8 @@ private:
 	Tanh = 3
 	Leaky Relu = 4
 	Gaussian = 5
+
+	SoftMax = 99
 	*/
 
 //Const

@@ -292,6 +292,9 @@ unsigned Topology::TypeCheck(const std::string & inType)
 	else if (inType == "Gaussian") {
 		return 5;
 	}
+	else if (inType == "SoftMax") {
+		return 99;
+	}
 	else {
 		return 0;
 	}
