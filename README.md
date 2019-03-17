@@ -5,16 +5,16 @@ Over the holidays I had created a rather elaborate C++ framework for a simple
 heterogenous neural network in order to test my understanding of various underlying topics
 in the field. However, many aspects of it were unrefined, so this will be a cleaned up recreation.  
 
+General Plans
+>Saving/Loading
+>Experimental Test Files
+>Manual Test Input
+
 DataHandler Plans
 >Split Single File
->Clean and Copy File, Read (No Cleaning)
-
-Cortex
->Make the Main Tests a General Function with parameters, so less fixing between test changes.
->Timekeeping
+>Clean and Copy File, Read (No Cleaning)?
 
 NN
->Gradient Clipping <L2, Hard > 
 >Cross Entropy, Log Loss, Softmax
 >Simple Recurrency
->LSTM <Pain the first time, may not do it again given some of the structural changes>
+>LSTM?
