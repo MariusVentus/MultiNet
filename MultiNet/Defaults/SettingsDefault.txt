@@ -39,3 +39,8 @@ XavierFull
 LogLoss
 [Net Error]
 LogLoss
+
+;;------------------------------------------------------------------------------------------
+;;Recurrency
+[Simple Recurrency]
+false

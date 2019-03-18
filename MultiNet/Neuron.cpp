@@ -12,9 +12,14 @@ Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned numOutpu
 	std::random_device rd;
 	std::mt19937 rng(rd());
 
-	for (unsigned cnxn = 0; cnxn < numInputs; ++cnxn) {
+	unsigned effectiveInputs = numInputs;
+	if (nSet.GetSimpleRecurrency() && myType != 99 && myType != 0) {
+		effectiveInputs++;
+	}
+
+	for (unsigned cnxn = 0; cnxn < effectiveInputs; ++cnxn) {
 		m_inputWeights.push_back(Synapse());
-		m_inputWeights.back().weight = RandomWeight(rng, numInputs, numOutputs);
+		m_inputWeights.back().weight = RandomWeight(rng, effectiveInputs, numOutputs);
 	}
 	std::cout << "N" << m_myType << " ";
 }
@@ -55,10 +60,15 @@ void Neuron::CalcOutputGradients(float targetVal)
 void Neuron::FeedForward(const Layer& prevLayer)
 {
 	float sum = 0.0f;
+	m_prevState = m_outputVal;
 
 	for (unsigned n = 0; n < prevLayer.size(); ++n) {
 		sum += prevLayer[n].GetOutputVal() * m_inputWeights[n].weight;
 	}
+	if (m_neuronSet.GetSimpleRecurrency()) {
+		sum += m_prevState * m_inputWeights.back().weight;
+	}
+
 	m_inputVals = sum;
 	m_outputVal = Neuron::TransferFunction(m_myType, sum);
 }
@@ -106,6 +116,7 @@ void Neuron::NormClipping(const float& inNorm)
 
 void Neuron::UpdateInputWeights(Layer& prevLayer)
 {
+	//Normal Update
 	for (unsigned n = 0; n < prevLayer.size(); n++) {
 		float oldDeltaWeight = m_inputWeights[n].deltaWeight;
 
@@ -114,6 +125,16 @@ void Neuron::UpdateInputWeights(Layer& prevLayer)
 
 		m_inputWeights[n].deltaWeight = newDeltaWeight;
 		m_inputWeights[n].weight += newDeltaWeight;
+	}
+	//Update Recurrent Weight
+	if (m_neuronSet.GetSimpleRecurrency() && m_myType != 99) {
+		float oldDeltaWeight = m_inputWeights.back().deltaWeight;
+
+		float newDeltaWeight =
+			m_neuronSet.GetEta()*m_prevState*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
+
+		m_inputWeights.back().deltaWeight = newDeltaWeight;
+		m_inputWeights.back().weight += newDeltaWeight;
 	}
 }
 

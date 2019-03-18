@@ -59,6 +59,9 @@ void Cortex::Train(const unsigned& epochMax)
 		m_Input.ResetEoF();
 		m_Input.ResetLoadedCount();
 		m_Output.ResetLoadedCount();
+		if (m_Settings.GetSimpleRecurrency()) {
+			m_NN.ClearNetMemory();
+		}
 	}
 	std::cout << "\nTraining Time: " << TrainTime.Mark() << "s \n";
 	std::cout << "\n";

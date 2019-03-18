@@ -39,6 +39,7 @@ public:
 	void SetOutputVal(float val) { m_outputVal = val; }
 	float GetsmSum(void) const { return m_smSum; }
 	float GetsmInputs(unsigned indexNum) const { return m_smInputs[indexNum]; }
+	void ClearCellMemory(void) { m_prevState = 0.0f; }
 
 private:
 //Variables
@@ -51,6 +52,7 @@ private:
 	float m_inputVals = 0.0f;
 	float m_outputVal = 0.0f;
 	float m_smSum = 0.0f;
+	float m_prevState = 0.0f;
 
 
 //Private Functions

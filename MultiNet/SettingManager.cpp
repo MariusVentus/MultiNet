@@ -89,6 +89,10 @@ void SettingManager::InputSettings(const std::string& dataString)
 				netE = Loss::LogLoss;
 			}
 		}
+		else if (line == "[SimpleRecurrency]") {
+			ReadLineAndClean(inStream, line);
+			simpleRecurrency = Stob(line);
+		}
 		else {
 			continue;
 		}

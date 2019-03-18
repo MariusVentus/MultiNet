@@ -12,6 +12,7 @@ public:
 	void FeedForward(const std::vector<float>& inputVals);
 	void BackProp(const std::vector<float>& targetVals);
 	void GetResults(std::vector<float>& resultVals) const;
+	void ClearNetMemory(void);
 
 	float GetError(void) const { return m_error; }
 

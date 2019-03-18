@@ -35,6 +35,9 @@ private:
 	Loss netL;
 	Loss netE;
 
+	//Simple Recurrency
+	bool simpleRecurrency; 
+
 //Functions
 public:
 	SettingManager() = delete;
@@ -51,6 +54,7 @@ public:
 	Loss GetNetError(void) const { return netE; }
 	bool GetRandTrainData(void) const { return randomizedTraining; }
 	float GetReservePercentage(void) const { return reservePercentage; }
+	bool GetSimpleRecurrency(void) const { return simpleRecurrency; }
 
 private:
 	void InputSettings(const std::string& dataString);

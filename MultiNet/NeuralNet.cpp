@@ -144,3 +144,12 @@ void NeuralNet::GetResults(std::vector<float>& resultVals) const
 		resultVals.push_back(m_layers.back()[n].GetOutputVal());
 	}
 }
+
+void NeuralNet::ClearNetMemory(void)
+{
+	for (unsigned i = 0; i < m_layers.size(); i++) {
+		for (unsigned j = 0; j < m_layers[i].size(); j++) {
+			m_layers[i][j].ClearCellMemory();
+		}
+	}
+}
