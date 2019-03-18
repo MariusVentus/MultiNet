@@ -34,7 +34,7 @@ XavierFull
 
 ;;------------------------------------------------------------------------------------------
 ;;Loss and Error
-;;MeanSquared, LogLoss
+;;MeanSquared, LogLoss (Cross Entropy)
 [Net Loss]
 LogLoss
 [Net Error]

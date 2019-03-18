@@ -55,15 +55,37 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 {
 	Layer& outputLayer = m_layers.back();
 	m_error = 0.0f;
-	//Error
-	for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
-		float delta = targetVals[n] - outputLayer[n].GetOutputVal();
-		m_error += delta*delta;
+//Error
+	if (m_netSet.GetNetError() == SettingManager::Loss::LogLoss) {
+		//Log Loss
+		if (outputLayer.size() > 2 && outputLayer[0].GetMyType() == 99 ) {
+			//Greater than Single Output (+Bias), and with Softmax
+			for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+				float delta = (targetVals[n] * log(outputLayer[n].GetOutputVal())); 
+				m_error += delta;
+			}
+			m_error = -m_error;
+		}
+		else {
+			for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+				float delta = (targetVals[n] * log(outputLayer[n].GetOutputVal())) + ((1 - targetVals[n])*log(1 - outputLayer[n].GetOutputVal()));
+				m_error += delta;
+			}
+			m_error = -m_error;
+			m_error /= (outputLayer.size() - 1);
+		}
 	}
-	m_error /= outputLayer.size() - 1;
-	m_error = sqrt(m_error);
+	else {
+		//Mean Squared Error
+		for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+			float delta = targetVals[n] - outputLayer[n].GetOutputVal();
+			m_error += delta*delta;
+		}
+		m_error /= outputLayer.size() - 1;
+		m_error = sqrt(m_error);
+	}
 
-	//Output Gradients
+//Output Gradients
 	float normL2 = 0.0f;
 	for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
 		outputLayer[n].CalcOutputGradients(targetVals[n]);
@@ -80,7 +102,7 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 		}
 	}
 
-	//Hidden Gradients
+//Hidden Gradients
 	for (unsigned layerNum = unsigned(m_layers.size()) - 2; layerNum > 0; layerNum--) {
 		Layer& hiddenLayer = m_layers[layerNum];
 		Layer& nextLayer = m_layers[layerNum + 1];
@@ -102,7 +124,7 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 			}
 		}
 	}
-	//Update Weights
+//Update Weights
 	for (unsigned layerNum = unsigned(m_layers.size()) - 1; layerNum > 0; layerNum--) {
 		Layer& layer = m_layers[layerNum];
 		Layer& prevLayer = m_layers[layerNum - 1];

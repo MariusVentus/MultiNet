@@ -22,6 +22,8 @@ void Cortex::Train(const unsigned& epochMax)
 	TimeKeeper TrainTime;
 	for (unsigned epochs = 0; epochs < epochMax; ++epochs) {
 		TimeKeeper EpochTime;
+		unsigned errorCount = 0;
+		float errorTot = 0.0f;
 		//Run Epoch
 		while (!m_Input.GetEoF()) {
 
@@ -43,6 +45,11 @@ void Cortex::Train(const unsigned& epochMax)
 				m_NN.BackProp(m_Output.GetRowX(m_rng.GetSelect(i)));
 				//Display
 				DisplayTraining(i, resultVals);
+				//Error
+				errorTot += m_NN.GetError();
+				errorCount++;
+				std::cout << "Error: " << m_NN.GetError() << " Avg Epoch Error: " << errorTot / static_cast<float>(errorCount) << "\n";
+
 			}
 			m_Input.ReloadBuffer();
 			m_Output.ReloadBuffer();
