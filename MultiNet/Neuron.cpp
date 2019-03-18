@@ -34,13 +34,20 @@ void Neuron::CalcHiddenGradients(const Layer& nextLayer)
 
 void Neuron::CalcOutputGradients(float targetVal)
 {
-	float delta = targetVal - m_outputVal;
-	if (m_myType != 99) {
-		m_gradient = delta * Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	if (m_neuronSet.GetNetLoss() == SettingManager::Loss::LogLoss && m_myType == 99) {
+		//Cross Entropy Grad
+		m_gradient = targetVal - m_outputVal;
 	}
 	else {
-		//SoftMax
-		m_gradient = delta * m_outputVal*(1.0f - m_outputVal);
+		//Mean Squared
+		float delta = targetVal - m_outputVal;
+		if (m_myType != 99) {
+			m_gradient = delta * Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+		}
+		else {
+			//SoftMax
+			m_gradient = delta * m_outputVal*(1.0f - m_outputVal);
+		}
 	}
 	HardClipping();
 }

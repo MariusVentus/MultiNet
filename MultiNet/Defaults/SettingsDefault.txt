@@ -1,13 +1,15 @@
 ;;Settings
 
+;;------------------------------------------------------------------------------------------
 ;;Data
 [Buffer Size]
 4
 [Randomize Training Data]
 true
-[Reserve Percentage] ;;Reserve Data for Testing. Caps at 50% Reserved.
+[Reserve Percentage] ;;Reserve Data for Testing. Caps at 50% Reserved. 
 25
 
+;;------------------------------------------------------------------------------------------
 ;;Gradient Clipping
 ;;None, Hard, L2
 ;;Clip Threshold
@@ -15,11 +17,13 @@ true
 None
 5.0
 
+;;------------------------------------------------------------------------------------------
 ;;Initialization
 ;;Normal, XavierSimple, or XavierFull
 [Initialization]
 XavierFull
 
+;;------------------------------------------------------------------------------------------
 ;;Learning Parameters
 [Eta]
 0.3
@@ -27,3 +31,11 @@ XavierFull
 0.5
 [Leak]
 0.01
+
+;;------------------------------------------------------------------------------------------
+;;Loss and Error
+;;MeanSquared, LogLoss
+[Net Loss]
+LogLoss
+[Net Error]
+LogLoss

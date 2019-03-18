@@ -71,6 +71,24 @@ void SettingManager::InputSettings(const std::string& dataString)
 				reservePercentage = 0.0f;
 			}
 		}
+		else if (line == "[NetLoss]") {
+			ReadLineAndClean(inStream, line);
+			if (line == "MeanSquared") {
+				netL = Loss::MeanSquared;
+			}
+			else if (line == "LogLoss") {
+				netL = Loss::LogLoss;
+			}
+		}
+		else if (line == "[NetError]") {
+			ReadLineAndClean(inStream, line);
+			if (line == "MeanSquared") {
+				netE = Loss::MeanSquared;
+			}
+			else if (line == "LogLoss") {
+				netE = Loss::LogLoss;
+			}
+		}
 		else {
 			continue;
 		}

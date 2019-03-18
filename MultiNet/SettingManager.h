@@ -12,7 +12,6 @@ public:
 
 	//Loss
 	enum class Loss { MeanSquared, LogLoss };
-	static constexpr Loss netL = Loss::MeanSquared;
 
 private:
 	//Data
@@ -32,6 +31,10 @@ private:
 	float alpha;
 	float leak; //For the Relu.
 
+	//Loss (for Optimization) and Error (for reporting).
+	Loss netL;
+	Loss netE;
+
 //Functions
 public:
 	SettingManager() = delete;
@@ -44,6 +47,8 @@ public:
 	float GetEta(void) const { return eta; }
 	Initialization GetInit(void) const { return netI; }
 	float GetLeak(void) const { return leak; }
+	Loss GetNetLoss(void) const { return netL; }
+	Loss GetNetError(void) const { return netE; }
 	bool GetRandTrainData(void) const { return randomizedTraining; }
 	float GetReservePercentage(void) const { return reservePercentage; }
 
