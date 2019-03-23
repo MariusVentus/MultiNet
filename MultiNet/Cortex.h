@@ -31,4 +31,5 @@ private:
 //Private Functions
 	void DisplayTesting(unsigned buffRow, const std::vector<float>& inResultVals) const;
 	void DisplayTraining(unsigned buffRow, const std::vector<float>& inResultVals) const;
+	bool CheckAccuracy(const std::vector<float>& output, const std::vector<float>& target) const;
 };

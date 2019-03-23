@@ -23,7 +23,7 @@ General Plans
 >Experimental Test Files, 
 >Manual Test Input, 
 >Gui(?), 
->Accuracy Display.
+>Proper Error Handling.
 
 DataHandler Plans
 >Split Single File, 
@@ -36,3 +36,4 @@ DataHandler Plans
 NN Plans
 >Dropout(?), 
 >LSTM Neurons(?).
+

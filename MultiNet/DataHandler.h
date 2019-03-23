@@ -14,6 +14,7 @@ private:
 	SettingManager m_dhSet;
 	std::ifstream inStream;
 	std::vector<std::vector<float>> dataBuffer;
+	std::vector<float> m_MaxValArr;
 	unsigned m_LoadedCount = 0;
 	const unsigned m_maxInputCount;
 	const unsigned m_TrainingDataSize;
@@ -30,6 +31,8 @@ public:
 	unsigned GetRowSize(void) const { return dataBuffer[0].size(); }
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
+
+	static unsigned GetMaxArrLoc(const std::vector<float>& inArr);
 
 	bool LoadTestBuff(void);
 	void PrepTest(void);

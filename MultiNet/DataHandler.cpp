@@ -1,4 +1,5 @@
 #include "DataHandler.h"
+#include <algorithm>
 #include <cmath>
 #include <sstream>
 
@@ -10,6 +11,11 @@ DataHandler::DataHandler(const SettingManager& dhSet, const std::string & ioFile
 	m_TrainingDataSize(static_cast<unsigned>(std::round(m_maxInputCount*((100.0f - m_dhSet.GetReservePercentage()) / 100.0f))))
 {
 	m_EoF = !LoadBuffer(dataBuffer, inStream, m_dhSet.GetBufferSize());
+}
+
+unsigned DataHandler::GetMaxArrLoc(const std::vector<float>& inArr)
+{
+	return std::distance(inArr.begin(), std::max_element(inArr.begin(), inArr.end()));
 }
 
 bool DataHandler::LoadTestBuff(void)
