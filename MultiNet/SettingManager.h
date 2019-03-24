@@ -18,6 +18,11 @@ private:
 	unsigned bufferSize;
 	bool randomizedTraining;
 	float reservePercentage;
+	bool smushedInputs;
+	bool expandedCol;
+
+	//Display
+	bool mainDisplay;
 
 	//Gradient Clipping
 	Clipping netC = Clipping::None;
@@ -48,6 +53,7 @@ public:
 	Clipping GetClipping(void) const { return netC; }
 	float GetClipThreshold(void) const { return clipThreshold; }
 	float GetEta(void) const { return eta; }
+	bool GetExpandedCol(void) const { return expandedCol; }
 	Initialization GetInit(void) const { return netI; }
 	float GetLeak(void) const { return leak; }
 	Loss GetNetLoss(void) const { return netL; }
@@ -55,6 +61,8 @@ public:
 	bool GetRandTrainData(void) const { return randomizedTraining; }
 	float GetReservePercentage(void) const { return reservePercentage; }
 	bool GetSimpleRecurrency(void) const { return simpleRecurrency; }
+	bool GetSmushedIn(void) const { return smushedInputs; }
+	bool GetMainDisplay(void) const { return mainDisplay; }
 
 private:
 	void InputSettings(const std::string& dataString);

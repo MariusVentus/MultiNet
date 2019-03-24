@@ -18,6 +18,7 @@ int main() {
 		std::cin.ignore();
 		std::cin.get();
 		Brain.Test();
+		std::cout << "Complete. \n";
 	}
 
 	std::cin.ignore();

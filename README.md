@@ -28,8 +28,7 @@ General Plans
 DataHandler Plans
 >Split Single File, 
 >Clean and Copy File, Read (No Cleaning)(?), 
->Smush Inputs by their highest value, 
->Split Outputs by highest value, 
+>Optimize GetExpandedRow(in retrospect, could just be part of GetRow), 
 >Semi-Colon separation for multi-output(?), 
 >Improve Randomizer Efficiency.
 

@@ -159,7 +159,7 @@ void Topology::InputTop(std::ifstream& inTop, const unsigned& nInput, const unsi
 			line.clear();
 			ReadLineAndClean(inTop, line);
 			std::stringstream layerInfo(line);
-			unsigned commaCount = std::count(line.begin(), line.end(), ',');
+			unsigned commaCount = static_cast<unsigned>(std::count(line.begin(), line.end(), ','));
 			unsigned loadRepeat = 0;
 			std::string cell;
 			std::vector<unsigned> tmpLayer;

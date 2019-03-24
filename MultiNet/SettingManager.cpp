@@ -93,6 +93,18 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			simpleRecurrency = Stob(line);
 		}
+		else if (line == "[SmushedInputs]") {
+			ReadLineAndClean(inStream, line);
+			smushedInputs = Stob(line);
+		}
+		else if (line == "[ExpandSoloColumn]") {
+			ReadLineAndClean(inStream, line);
+			expandedCol = Stob(line);
+		}
+		else if (line == "[MainDisplay]") {
+			ReadLineAndClean(inStream, line);
+			mainDisplay = Stob(line);
+		}
 		else {
 			continue;
 		}

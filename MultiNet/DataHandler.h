@@ -25,14 +25,19 @@ public:
 	DataHandler() = delete;
 	DataHandler(const SettingManager& dhSet, const std::string& ioFile);
 
-	unsigned GetBuffSize(void) const { return dataBuffer.size(); }
+	unsigned GetBuffSize(void) const { return static_cast<unsigned>(dataBuffer.size()); }
 	bool GetEoF(void) const { return m_EoFDelayed; }
 	unsigned GetMaxInputs(void) const { return m_maxInputCount; }
-	unsigned GetRowSize(void) const { return dataBuffer[0].size(); }
+	unsigned GetRawRowSize(void) const { return dataBuffer[0].size(); }
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 
 	static unsigned GetMaxArrLoc(const std::vector<float>& inArr);
+	std::vector<float> GetExpandedRowX(unsigned inX) const;
+	unsigned GetRowSize(void) const;
+	std::vector<float> GetSmushedRowX(unsigned inX) const;
+
+
 
 	bool LoadTestBuff(void);
 	void PrepTest(void);
@@ -47,8 +52,11 @@ private:
 	bool LoadBuffer(std::vector<std::vector<float>>& buffer, std::ifstream& dataStream, const unsigned bufferSize);
 	//Checks File, Counts Maximum inputs that can load into buffer. 
 	unsigned MaxInputCount(void);
+	//Checks through the whole file, finds the largest number in each row. 
+	void PopulateMaxValArr(void);
 	//Reads Line, clears out common issues with a text csv (white space, lines, extra carriage returns).
 	void ReadLineAndClean(std::ifstream& dataStream, std::string& dataString);
+	//Split a string into float tokens.
 	std::vector<float>SplitIntoFloatTokens(const std::string& dataString);
 
 };
