@@ -19,7 +19,8 @@ private:
 	bool randomizedTraining;
 	float reservePercentage;
 	bool smushedInputs;
-	bool expandedCol;
+	bool expandIn;
+	bool expandOut;
 
 	//Display
 	bool mainDisplay;
@@ -48,12 +49,15 @@ public:
 	SettingManager() = delete;
 	SettingManager(const std::string& setFile);
 
+
+	bool ExpandedIn(void) const { return expandIn; }
+	bool ExpandedOut(void) const { return expandOut; }
+
 	float GetAlpha(void) const { return alpha; }
 	unsigned GetBufferSize(void) const { return bufferSize; }
 	Clipping GetClipping(void) const { return netC; }
 	float GetClipThreshold(void) const { return clipThreshold; }
 	float GetEta(void) const { return eta; }
-	bool GetExpandedCol(void) const { return expandedCol; }
 	Initialization GetInit(void) const { return netI; }
 	float GetLeak(void) const { return leak; }
 	Loss GetNetLoss(void) const { return netL; }

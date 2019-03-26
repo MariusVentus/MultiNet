@@ -39,10 +39,20 @@ std::vector<float> DataHandler::GetExpandedRowX(unsigned inX) const
 	}
 }
 
-unsigned DataHandler::GetRowSize(void) const
+unsigned DataHandler::GetIRowSize(void) const
 {
-	if (m_dhSet.GetExpandedCol() && dataBuffer[0].size() == 1) {
-		return static_cast<unsigned>(GetExpandedRowX(0).size());
+	if (m_dhSet.ExpandedIn() && dataBuffer[0].size() == 1) {
+		return static_cast<unsigned>(m_MaxValArr[0]) + 1;
+	}
+	else {
+		return static_cast<unsigned>(dataBuffer[0].size());
+	}
+}
+
+unsigned DataHandler::GetORowSize(void) const
+{
+	if (m_dhSet.ExpandedOut() && dataBuffer[0].size() == 1) {
+		return static_cast<unsigned>(m_MaxValArr[0]) + 1;
 	}
 	else {
 		return static_cast<unsigned>(dataBuffer[0].size());

@@ -28,13 +28,13 @@ public:
 	unsigned GetBuffSize(void) const { return static_cast<unsigned>(dataBuffer.size()); }
 	bool GetEoF(void) const { return m_EoFDelayed; }
 	unsigned GetMaxInputs(void) const { return m_maxInputCount; }
-	unsigned GetRawRowSize(void) const { return dataBuffer[0].size(); }
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 
 	static unsigned GetMaxArrLoc(const std::vector<float>& inArr);
 	std::vector<float> GetExpandedRowX(unsigned inX) const;
-	unsigned GetRowSize(void) const;
+	unsigned GetIRowSize(void) const;
+	unsigned GetORowSize(void) const;
 	std::vector<float> GetSmushedRowX(unsigned inX) const;
 
 

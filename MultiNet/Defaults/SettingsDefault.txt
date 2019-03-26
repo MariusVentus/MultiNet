@@ -8,10 +8,12 @@
 true
 [Reserve Percentage] ;;Reserve Data for Testing. Caps at 50% Reserved. 
 25
-[Smushed Inputs] ;;Divide inputs by the greatest input in their column. 
+[Smushed Inputs] ;;Divide inputs by the greatest input in their column. Do not Expand.
 false
-[Expand Solo Column] ;;Single-Column Inputs and Outputs are turned into one-hot vectors. 
+[Expand Input] ;;Single-Column Inputs are turned into one-hot vectors. Do not Smush.
 false
+[Expand Output] ;;Single-Column Outputs are turned into one-hot vectors. 
+true
 
 ;;------------------------------------------------------------------------------------------
 ;;Display

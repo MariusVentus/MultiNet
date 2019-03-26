@@ -9,7 +9,7 @@ Cortex::Cortex(const std::string& settingFile, const std::string& topologyFile, 
 	m_Settings(settingFile),
 	m_Input(m_Settings, inputFile),
 	m_Output(m_Settings, outputFile),
-	m_Top(topologyFile, m_Input.GetRowSize(), m_Output.GetRowSize()),
+	m_Top(topologyFile, m_Input.GetIRowSize(), m_Output.GetORowSize()),
 	m_NN(m_Top, m_Settings)
 {
 	assert(m_Input.GetBuffSize() == m_Output.GetBuffSize());
@@ -41,10 +41,7 @@ void Cortex::Train(const unsigned& epochMax)
 				assert(m_Input.GetBuffSize() == m_Output.GetBuffSize());
 				std::vector<float> resultVals;
 				//Feed
-				if (m_Settings.GetExpandedCol() && m_Input.GetRawRowSize() == 1) {
-					m_NN.FeedForward(m_Input.GetExpandedRowX(m_rng.GetSelect(i)));
-				}
-				else {
+				if (!m_Settings.ExpandedIn()) {
 					if (!m_Settings.GetSmushedIn()) {
 						m_NN.FeedForward(m_Input.GetRowX(m_rng.GetSelect(i)));
 					}
@@ -52,10 +49,13 @@ void Cortex::Train(const unsigned& epochMax)
 						m_NN.FeedForward(m_Input.GetSmushedRowX(m_rng.GetSelect(i)));
 					}
 				}
+				else {
+					m_NN.FeedForward(m_Input.GetExpandedRowX(m_rng.GetSelect(i)));
+				}
 				//Results
 				m_NN.GetResults(resultVals);
 				//Correct
-				if (!m_Settings.GetExpandedCol()) {
+				if (!m_Settings.ExpandedOut()) {
 					m_NN.BackProp(m_Output.GetRowX(m_rng.GetSelect(i)));
 				}
 				else {
@@ -70,7 +70,7 @@ void Cortex::Train(const unsigned& epochMax)
 				epochCount++;
 				std::cout << "Error: " << m_NN.GetError() << " Avg Epoch Error: " << errorTot / static_cast<float>(epochCount) << "\n";
 				//Accuracy
-				if (!m_Settings.GetExpandedCol()) {
+				if (!m_Settings.ExpandedOut()) {
 					if (CheckAccuracy(resultVals, m_Output.GetRowX(m_rng.GetSelect(i)))) {
 						epochAccuracy++;
 						totalAccuracy++;
@@ -121,16 +121,16 @@ void Cortex::Test(void)
 				assert(m_Input.GetBuffSize() == m_Output.GetBuffSize());
 				std::vector<float> resultVals;
 				//Feed
-				if (m_Settings.GetExpandedCol() && m_Input.GetRawRowSize() == 1) {
-					m_NN.FeedForward(m_Input.GetExpandedRowX(i));
-				}
-				else {
+				if (!m_Settings.ExpandedIn()) {
 					if (!m_Settings.GetSmushedIn()) {
 						m_NN.FeedForward(m_Input.GetRowX(i));
 					}
 					else {
 						m_NN.FeedForward(m_Input.GetSmushedRowX(i));
 					}
+				}
+				else {
+					m_NN.FeedForward(m_Input.GetExpandedRowX(i));
 				}
 				//Results
 				m_NN.GetResults(resultVals);
@@ -143,7 +143,7 @@ void Cortex::Test(void)
 				testCount++;
 				std::cout << "Error: " << m_NN.GetError() << " Avg Epoch Error: " << errorTot / static_cast<float>(testCount) << "\n";
 				//Accuracy
-				if (!m_Settings.GetExpandedCol()) {
+				if (!m_Settings.ExpandedOut()) {
 					if (CheckAccuracy(resultVals, m_Output.GetRowX(i))) {
 						testAccuracy++;
 					}
@@ -174,36 +174,36 @@ void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResult
 	//Inputs
 	std::cout << "\n";
 	std::cout << "Input: ";
-	for (unsigned j = 0; j < m_Input.GetRowSize(); j++) {
+	for (unsigned j = 0; j < m_Input.GetIRowSize(); j++) {
 		std::cout << m_Input.GetRowX(buffRow)[j] << " ";
 	}
 	std::cout << "\n";
 
 	if (m_Settings.GetSmushedIn()) {
 		std::cout << "Smushed Input: ";
-		for (unsigned j = 0; j < m_Input.GetRowSize(); j++) {
+		for (unsigned j = 0; j < m_Input.GetIRowSize(); j++) {
 			std::cout << m_Input.GetSmushedRowX(buffRow)[j] << " ";
 		}
 		std::cout << "\n";
 	}
 	//Results and Outputs
 	std::cout << "Output: ";
-	for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+	for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 		std::cout << inResultVals[j] << " ";
 	}
 	std::cout << "\n";
 
 	//Targets
-	if (m_Settings.GetExpandedCol()) {
+	if (m_Settings.ExpandedOut()) {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 			std::cout << m_Output.GetExpandedRowX(buffRow)[j] << " ";
 		}
 		std::cout << "\n";
 	}
 	else {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 			std::cout << m_Output.GetRowX(buffRow)[j] << " ";
 		}
 		std::cout << "\n";
@@ -215,35 +215,35 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 	//Inputs
 	std::cout << "\n";
 	std::cout << "Input: ";
-	for (unsigned j = 0; j < m_Input.GetRowSize(); j++) {
+	for (unsigned j = 0; j < m_Input.GetIRowSize(); j++) {
 		std::cout << m_Input.GetRowX(m_rng.GetSelect(buffRow))[j] << " ";
 	}
 	std::cout << "\n";
 
 	if (m_Settings.GetSmushedIn()) {
 		std::cout << "Smushed Input: ";
-		for (unsigned j = 0; j < m_Input.GetRowSize(); j++) {
+		for (unsigned j = 0; j < m_Input.GetIRowSize(); j++) {
 			std::cout << m_Input.GetSmushedRowX(m_rng.GetSelect(buffRow))[j] << " ";
 		}
 		std::cout << "\n";
 	}
 	//Results and Outputs
 	std::cout << "Output: ";
-	for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+	for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 		std::cout << inResultVals[j] << " ";
 	}
 	std::cout << "\n";
 	//Targets
-	if (m_Settings.GetExpandedCol()) {
+	if (m_Settings.ExpandedOut()) {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 			std::cout << m_Output.GetExpandedRowX(m_rng.GetSelect(buffRow))[j] << " ";
 		}
 		std::cout << "\n";
 	}
 	else {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetRowSize(); j++) {
+		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 			std::cout << m_Output.GetRowX(m_rng.GetSelect(buffRow))[j] << " ";
 		}
 		std::cout << "\n";

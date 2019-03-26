@@ -97,9 +97,13 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			smushedInputs = Stob(line);
 		}
-		else if (line == "[ExpandSoloColumn]") {
+		else if (line == "[ExpandInput]") {
 			ReadLineAndClean(inStream, line);
-			expandedCol = Stob(line);
+			expandIn = Stob(line);
+		}
+		else if (line == "[ExpandOutput]") {
+			ReadLineAndClean(inStream, line);
+			expandOut = Stob(line);
 		}
 		else if (line == "[MainDisplay]") {
 			ReadLineAndClean(inStream, line);
