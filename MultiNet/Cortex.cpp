@@ -43,6 +43,7 @@ void Cortex::ManualRun(const std::string& manIn)
 	}
 
 	//Run
+	std::cout << "Running!\n";
 	if (manualInputs.size() == m_InputCount) {
 		std::vector<float> resultVals;
 		//Feed
@@ -57,7 +58,7 @@ void Cortex::ManualRun(const std::string& manIn)
 		m_NN.GetResults(resultVals);
 
 		//Display Inputs
-		std::cout << "\n";
+		std::cout << "\nResults!\n";
 		std::cout << "Input: ";
 		for (unsigned j = 0; j < manualInputs.size(); j++) {
 			std::cout << manualInputs[j] << " ";
@@ -69,10 +70,10 @@ void Cortex::ManualRun(const std::string& manIn)
 		for (unsigned j = 0; j < resultVals.size(); j++) {
 			std::cout << resultVals[j] << " ";
 		}
-		std::cout << "\n";
+		std::cout << "\n\n";
 	}
 	else {
-		std::cout << "Manual input size did not match normal input size.\n";
+		std::cout << "\nManual input size did not match normal input size.\n\n";
 	}
 }
 
