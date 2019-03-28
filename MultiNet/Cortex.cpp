@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 Cortex::Cortex(const std::string& settingFile, const std::string& topologyFile, const std::string& inputFile, const std::string& outputFile)
 	:
@@ -13,8 +14,66 @@ Cortex::Cortex(const std::string& settingFile, const std::string& topologyFile, 
 	m_NN(m_Top, m_Settings)
 {
 	assert(m_Input.GetBuffSize() == m_Output.GetBuffSize());
+	//Must set InputCount at the beginning, as it needs to use a loaded buffer.
+	m_InputCount = m_Input.GetIRowSize();
 	m_TrainingDataSize = static_cast<unsigned>(std::round(m_Input.GetMaxInputs()*((100.0f - m_Settings.GetReservePercentage()) / 100.0f)));
 	std::cout << "\nTraining on " << m_TrainingDataSize << " sets, reserving " << m_Input.GetMaxInputs() - m_TrainingDataSize << " sets. \n\n";
+}
+
+void Cortex::ManualRun(const std::string& manIn)
+{
+	//Setup and Input
+	std::vector<float> manualInputs;
+	std::stringstream lineStream(manIn);
+	std::string	cell;
+	while (std::getline(lineStream, cell, ',')) {
+		manualInputs.emplace_back(stof(cell));
+	}
+	if (m_Settings.ExpandedIn() && manualInputs.size() == 1) {
+		std::vector<float> tempBuff;
+		for (unsigned i = 0; i <= m_Input.GetMaxValArrX(0); i++) {
+			if (manualInputs[0] != i) {
+				tempBuff.emplace_back(0.0f);
+			}
+			else {
+				tempBuff.emplace_back(1.0f);
+			}
+		}
+		manualInputs = tempBuff;
+	}
+
+	//Run
+	if (manualInputs.size() == m_InputCount) {
+		std::vector<float> resultVals;
+		//Feed
+		if (m_Settings.GetSmushedIn() && !m_Settings.ExpandedIn()) {
+			for (unsigned i = 0; i < manualInputs.size(); i++) {
+				manualInputs[i] = manualInputs[i] / m_Input.GetMaxValArrX(i);
+			}
+		}
+		m_NN.FeedForward(manualInputs);
+
+		//Results
+		m_NN.GetResults(resultVals);
+
+		//Display Inputs
+		std::cout << "\n";
+		std::cout << "Input: ";
+		for (unsigned j = 0; j < manualInputs.size(); j++) {
+			std::cout << manualInputs[j] << " ";
+		}
+		std::cout << "\n";
+
+		//Display Results and Outputs
+		std::cout << "Output: ";
+		for (unsigned j = 0; j < resultVals.size(); j++) {
+			std::cout << resultVals[j] << " ";
+		}
+		std::cout << "\n";
+	}
+	else {
+		std::cout << "Manual input size did not match normal input size.\n";
+	}
 }
 
 void Cortex::Train(const unsigned& epochMax)
@@ -105,7 +164,7 @@ void Cortex::Train(const unsigned& epochMax)
 
 void Cortex::Test(void)
 {
-	if (m_Input.GetMaxInputs() - m_TrainingDataSize) {
+	if (m_Input.GetMaxInputs() != m_TrainingDataSize) {
 		TimeKeeper TestTime;
 		unsigned testCount = 0;
 		float errorTot = 0.0f;
@@ -159,7 +218,7 @@ void Cortex::Test(void)
 			m_Output.ReloadTestBuffer();
 		}
 		std::cout << "Test Time: " << TestTime.Mark() << "s \n";
-
+		std::cout << "\n";
 		m_Input.ResetEoF();
 	}
 	else {

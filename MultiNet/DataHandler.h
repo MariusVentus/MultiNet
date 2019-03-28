@@ -30,6 +30,7 @@ public:
 	unsigned GetMaxInputs(void) const { return m_maxInputCount; }
 	std::vector<float> GetRowX(unsigned inX) const { return dataBuffer[inX]; }
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
+	float GetMaxValArrX(const unsigned inX) const { return m_MaxValArr[inX]; }
 
 	static unsigned GetMaxArrLoc(const std::vector<float>& inArr);
 	std::vector<float> GetExpandedRowX(unsigned inX) const;
