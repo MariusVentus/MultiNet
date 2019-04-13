@@ -96,6 +96,19 @@ void SettingManager::InputSettings(const std::string& dataString)
 		else if (line == "[SmushedInputs]") {
 			ReadLineAndClean(inStream, line);
 			smushedInputs = Stob(line);
+			if (smushedInputs == true) {
+				ReadLineAndClean(inStream, line);
+				if (line == "Auto" || line == "auto") {
+					autoSmush = true;
+				}
+				else {
+					autoSmush = false;
+					smushBy = std::stof(line);
+					if (smushBy == 0.0f) {
+						smushBy = 1.0f;
+					}
+				}
+			}
 		}
 		else if (line == "[ExpandInput]") {
 			ReadLineAndClean(inStream, line);

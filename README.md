@@ -26,8 +26,6 @@ General Plans
 >Experimental Test Files, 
 >Gui(?), 
 >Proper Error Handling.
-> Display On-hot outs as a number
-> Unify Column max, Manual Max
 
 DataHandler Plans
 >Split Single File, 

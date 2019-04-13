@@ -19,6 +19,8 @@ private:
 	bool randomizedTraining;
 	float reservePercentage;
 	bool smushedInputs;
+	bool autoSmush;
+	float smushBy;
 	bool expandIn;
 	bool expandOut;
 
@@ -67,6 +69,8 @@ public:
 	float GetReservePercentage(void) const { return reservePercentage; }
 	bool GetSimpleRecurrency(void) const { return simpleRecurrency; }
 	bool GetSmushedIn(void) const { return smushedInputs; }
+	bool GetAutoSmush(void) const { return autoSmush; }
+	float GetSmushVal(void) const { return smushBy; }
 	bool GetMainDisplay(void) const { return mainDisplay; }
 	bool GetHotToNum(void) const { return hotToNum; }
 

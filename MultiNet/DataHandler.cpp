@@ -62,8 +62,15 @@ unsigned DataHandler::GetORowSize(void) const
 std::vector<float> DataHandler::GetSmushedRowX(unsigned inX) const
 {
 	std::vector<float> tempBuff(dataBuffer[inX].size());
-	for (unsigned i = 0; i < dataBuffer[inX].size(); i++) {
-		tempBuff[i] = dataBuffer[inX][i] / m_MaxValArr[i];
+	if (m_dhSet.GetAutoSmush()) {
+		for (unsigned i = 0; i < dataBuffer[inX].size(); i++) {
+			tempBuff[i] = dataBuffer[inX][i] / m_MaxValArr[i];
+		}
+	}
+	else {
+		for (unsigned i = 0; i < dataBuffer[inX].size(); i++) {
+			tempBuff[i] = dataBuffer[inX][i] / m_dhSet.GetSmushVal();
+		}
 	}
 	return tempBuff;
 }
