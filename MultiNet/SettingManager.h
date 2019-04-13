@@ -24,6 +24,7 @@ private:
 
 	//Display
 	bool mainDisplay;
+	bool hotToNum;
 
 	//Gradient Clipping
 	Clipping netC = Clipping::None;
@@ -67,6 +68,7 @@ public:
 	bool GetSimpleRecurrency(void) const { return simpleRecurrency; }
 	bool GetSmushedIn(void) const { return smushedInputs; }
 	bool GetMainDisplay(void) const { return mainDisplay; }
+	bool GetHotToNum(void) const { return hotToNum; }
 
 private:
 	void InputSettings(const std::string& dataString);

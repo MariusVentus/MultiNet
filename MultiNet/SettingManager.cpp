@@ -109,6 +109,10 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			mainDisplay = Stob(line);
 		}
+		else if (line == "[VectorOutputtoNum]") {
+			ReadLineAndClean(inStream, line);
+			hotToNum = Stob(line);
+		}
 		else {
 			continue;
 		}

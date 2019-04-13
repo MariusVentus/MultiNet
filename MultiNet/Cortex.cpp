@@ -67,8 +67,13 @@ void Cortex::ManualRun(const std::string& manIn)
 
 		//Display Results and Outputs
 		std::cout << "Output: ";
-		for (unsigned j = 0; j < resultVals.size(); j++) {
-			std::cout << resultVals[j] << " ";
+		if (!m_Settings.GetHotToNum()) {
+			for (unsigned j = 0; j < resultVals.size(); j++) {
+				std::cout << resultVals[j] << " ";
+			}
+		}
+		else {
+			std::cout << DataHandler::GetMaxArrLoc(resultVals);
 		}
 		std::cout << "\n\n";
 	}
@@ -87,6 +92,11 @@ void Cortex::Train(const unsigned& epochMax)
 		float epochAccuracy = 0.0f;
 		unsigned epochCount = 0;
 		float errorTot = 0.0f;
+		
+		if (m_Settings.GetSimpleRecurrency()) {
+			m_NN.ClearNetMemory();
+		}
+
 		//Run Epoch
 		while (!m_Input.GetEoF()) {
 
@@ -154,9 +164,6 @@ void Cortex::Train(const unsigned& epochMax)
 		m_Input.ResetEoF();
 		m_Input.ResetLoadedCount();
 		m_Output.ResetLoadedCount();
-		if (m_Settings.GetSimpleRecurrency()) {
-			m_NN.ClearNetMemory();
-		}
 	}
 	std::cout << "\nTraining Accuracy: " << totalAccuracy / static_cast<float>(trainCount) << "\n";
 	std::cout << "Training Time: " << TrainTime.Mark() << "s \n";
@@ -248,23 +255,38 @@ void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResult
 	}
 	//Results and Outputs
 	std::cout << "Output: ";
-	for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
-		std::cout << inResultVals[j] << " ";
+	if (!m_Settings.GetHotToNum()) {
+		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
+			std::cout << inResultVals[j] << " ";
+		}
+	}
+	else {
+		std::cout << DataHandler::GetMaxArrLoc(inResultVals);
 	}
 	std::cout << "\n";
 
 	//Targets
 	if (m_Settings.ExpandedOut()) {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
-			std::cout << m_Output.GetExpandedRowX(buffRow)[j] << " ";
+		if (!m_Settings.GetHotToNum()) {
+			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
+				std::cout << m_Output.GetExpandedRowX(buffRow)[j] << " ";
+			}
+		}
+		else {
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetExpandedRowX(buffRow));
 		}
 		std::cout << "\n";
 	}
 	else {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
-			std::cout << m_Output.GetRowX(buffRow)[j] << " ";
+		if (!m_Settings.GetHotToNum()) {
+			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
+				std::cout << m_Output.GetRowX(buffRow)[j] << " ";
+			}
+		}
+		else {
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetRowX(buffRow));
 		}
 		std::cout << "\n";
 	}
@@ -289,22 +311,37 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 	}
 	//Results and Outputs
 	std::cout << "Output: ";
-	for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
-		std::cout << inResultVals[j] << " ";
+	if (!m_Settings.GetHotToNum()) {
+		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
+			std::cout << inResultVals[j] << " ";
+		}
+	}
+	else {
+		std::cout << DataHandler::GetMaxArrLoc(inResultVals);
 	}
 	std::cout << "\n";
 	//Targets
 	if (m_Settings.ExpandedOut()) {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
-			std::cout << m_Output.GetExpandedRowX(m_rng.GetSelect(buffRow))[j] << " ";
+		if (!m_Settings.GetHotToNum()) {
+			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
+				std::cout << m_Output.GetExpandedRowX(m_rng.GetSelect(buffRow))[j] << " ";
+			}
+		}
+		else {
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetExpandedRowX(m_rng.GetSelect(buffRow)));
 		}
 		std::cout << "\n";
 	}
 	else {
 		std::cout << "Target: ";
-		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
-			std::cout << m_Output.GetRowX(m_rng.GetSelect(buffRow))[j] << " ";
+		if (!m_Settings.GetHotToNum()) {
+			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
+				std::cout << m_Output.GetRowX(m_rng.GetSelect(buffRow))[j] << " ";
+			}
+		}
+		else {
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
 		}
 		std::cout << "\n";
 	}

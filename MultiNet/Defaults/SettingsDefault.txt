@@ -19,6 +19,8 @@ true
 ;;Display
 [Main Display]
 true
+[Vector Output to Num]
+true
 
 ;;------------------------------------------------------------------------------------------
 ;;Gradient Clipping
