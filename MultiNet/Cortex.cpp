@@ -49,7 +49,14 @@ void Cortex::ManualRun(const std::string& manIn)
 		//Feed
 		if (m_Settings.GetSmushedIn() && !m_Settings.ExpandedIn()) {
 			for (unsigned i = 0; i < manualInputs.size(); i++) {
-				manualInputs[i] = manualInputs[i] / m_Input.GetMaxValArrX(i);
+
+				//Add if for smushing
+				if (m_Settings.GetAutoSmush()) {
+					manualInputs[i] = manualInputs[i] / m_Input.GetMaxValArrX(i);
+				}
+				else {
+					manualInputs[i] = manualInputs[i] / m_Settings.GetSmushVal();
+				}
 			}
 		}
 		m_NN.FeedForward(manualInputs);
