@@ -93,6 +93,10 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			simpleRecurrency = Stob(line);
 		}
+		else if (line == "[RestrictLinearMemory]") {
+			ReadLineAndClean(inStream, line);
+			restrictLinear = Stob(line);
+		}
 		else if (line == "[SmushedInputs]") {
 			ReadLineAndClean(inStream, line);
 			smushedInputs = Stob(line);

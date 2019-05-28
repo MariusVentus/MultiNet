@@ -46,6 +46,7 @@ private:
 
 	//Simple Recurrency
 	bool simpleRecurrency; 
+	bool restrictLinear;
 
 //Functions
 public:
@@ -73,6 +74,7 @@ public:
 	float GetSmushVal(void) const { return smushBy; }
 	bool GetMainDisplay(void) const { return mainDisplay; }
 	bool GetHotToNum(void) const { return hotToNum; }
+	bool isLinearRestricted(void) const { return restrictLinear; }
 
 private:
 	void InputSettings(const std::string& dataString);

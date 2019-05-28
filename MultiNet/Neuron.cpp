@@ -14,7 +14,9 @@ Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned numOutpu
 
 	unsigned effectiveInputs = numInputs;
 	if (nSet.GetSimpleRecurrency() && myType != 99 && myType != 0) {
-		effectiveInputs++;
+		if (!nSet.isLinearRestricted() || (myType != 1 && myType != 4)) {
+			effectiveInputs++;
+		}
 	}
 
 	for (unsigned cnxn = 0; cnxn < effectiveInputs; ++cnxn) {
@@ -60,13 +62,34 @@ void Neuron::CalcOutputGradients(float targetVal)
 void Neuron::FeedForward(const Layer& prevLayer)
 {
 	float sum = 0.0f;
+
 	m_prevState = m_outputVal;
 
 	for (unsigned n = 0; n < prevLayer.size(); ++n) {
 		sum += prevLayer[n].GetOutputVal() * m_inputWeights[n].weight;
 	}
 	if (m_neuronSet.GetSimpleRecurrency()) {
-		sum += m_prevState * m_inputWeights.back().weight;
+		if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+			sum += m_prevState * m_inputWeights.back().weight;
+		}
+	}
+
+	//Added debug check for NANs, Alerts of issue and stops further training. 
+	if (isnan(sum)) { 
+		std::cout << "Somethings's causing the issue before this point!"; 
+		std::cin.get();
+		for (unsigned n = 0; n < prevLayer.size(); ++n) {
+			//std::cout << prevLayer[n].GetOutputVal() * m_inputWeights[n].weight << "\n";
+			if (isnan(prevLayer[n].GetOutputVal() * m_inputWeights[n].weight)) {
+				std::cout << "Output: " << prevLayer[n].GetOutputVal() << "\n";
+				std::cout << "Weight: " << m_inputWeights[n].weight << "\n";
+				std::cout << "Its ID: " << n << ", my ID is: " << m_myIndex << "\n";
+				std::cout << "Its type: " << prevLayer[n].GetMyType() << ", my Type: "<< m_myType << "\n";
+				std::cout << "Its Memory: " << prevLayer[n].GetCellMemory() << "\n";
+				std::cin.get();
+			}
+		}
+		std::cin.get();
 	}
 
 	m_inputVals = sum;
@@ -128,13 +151,15 @@ void Neuron::UpdateInputWeights(Layer& prevLayer)
 	}
 	//Update Recurrent Weight
 	if (m_neuronSet.GetSimpleRecurrency() && m_myType != 99) {
-		float oldDeltaWeight = m_inputWeights.back().deltaWeight;
+		if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+			float oldDeltaWeight = m_inputWeights.back().deltaWeight;
 
-		float newDeltaWeight =
-			m_neuronSet.GetEta()*m_prevState*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
+			float newDeltaWeight =
+				m_neuronSet.GetEta()*m_prevState*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
 
-		m_inputWeights.back().deltaWeight = newDeltaWeight;
-		m_inputWeights.back().weight += newDeltaWeight;
+			m_inputWeights.back().deltaWeight = newDeltaWeight;
+			m_inputWeights.back().weight += newDeltaWeight;
+		}
 	}
 }
 

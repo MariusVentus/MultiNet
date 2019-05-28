@@ -18,6 +18,7 @@ Xavier Weight Initialization, both Simple and Full variants.
 Error Display can be set to Log Loss or Mean Squared. 
 Loss Function can be set to Log Loss (for Cross Entropy) or Mean Squared. 
 Simple Recurrency can add basic memory to standard neurons. 
+Restrict Linear Memory can help prevent NANs by stopping Linear and Relu Neurons from having memory, which can balloon to infinity. 
 
 --Plans and Possible Features--
 
@@ -31,7 +32,7 @@ DataHandler Plans
 >Split Single File, 
 >Clean and Copy File, Read (No Cleaning)(?), 
 >Semi-Colon separation for multi-output(?), 
->Improve Randomizer Efficiency.
+>Improve Randomizer.
 
 NN Plans
 >Dropout(?), 

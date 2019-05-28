@@ -40,6 +40,7 @@ public:
 	float GetsmSum(void) const { return m_smSum; }
 	float GetsmInputs(unsigned indexNum) const { return m_smInputs[indexNum]; }
 	void ClearCellMemory(void) { m_prevState = 0.0f; }
+	float GetCellMemory(void) const { return m_prevState; }
 
 private:
 //Variables
