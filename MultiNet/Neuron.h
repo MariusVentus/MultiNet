@@ -42,6 +42,12 @@ public:
 	void ClearCellMemory(void) { m_prevState = 0.0f; }
 	float GetCellMemory(void) const { return m_prevState; }
 
+	bool IsAlive(void) const { return m_isAlive; }
+	void KillNeuron(void) { m_isAlive = false; }
+	void ReviveNeuron(void) { m_isAlive = true; }
+	bool IsTraining(void) const { return m_isTraining; }
+	void SetTraining(const bool& set) { m_isTraining = set; }
+
 private:
 //Variables
 	SettingManager m_neuronSet;
@@ -54,6 +60,8 @@ private:
 	float m_outputVal = 0.0f;
 	float m_smSum = 0.0f;
 	float m_prevState = 0.0f;
+	bool m_isAlive = true;
+	bool m_isTraining = false;
 
 
 //Private Functions

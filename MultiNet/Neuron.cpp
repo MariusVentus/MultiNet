@@ -28,15 +28,17 @@ Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned numOutpu
 
 void Neuron::CalcHiddenGradients(const Layer& nextLayer)
 {
-	float dow = SumDOW(nextLayer);
-	if (m_myType != 99) {
-		m_gradient = dow*Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+	if (IsAlive()) {
+		float dow = SumDOW(nextLayer);
+		if (m_myType != 99) {
+			m_gradient = dow * Neuron::TransferFunctionDerivative(m_myType, m_inputVals);
+		}
+		else {
+			//SoftMax
+			m_gradient = dow * m_outputVal*(1.0f - m_outputVal);
+		}
+		HardClipping();
 	}
-	else {
-		//SoftMax
-		m_gradient = dow*m_outputVal*(1.0f - m_outputVal);
-	}
-	HardClipping();
 }
 
 void Neuron::CalcOutputGradients(float targetVal)
@@ -61,39 +63,61 @@ void Neuron::CalcOutputGradients(float targetVal)
 
 void Neuron::FeedForward(const Layer& prevLayer)
 {
-	float sum = 0.0f;
+	if (IsAlive()) {
+		float sum = 0.0f;
 
-	m_prevState = m_outputVal;
+		m_prevState = m_outputVal;
 
-	for (unsigned n = 0; n < prevLayer.size(); ++n) {
-		sum += prevLayer[n].GetOutputVal() * m_inputWeights[n].weight;
-	}
-	if (m_neuronSet.GetSimpleRecurrency()) {
-		if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
-			sum += m_prevState * m_inputWeights.back().weight;
-		}
-	}
-
-	//Added debug check for NANs, Alerts of issue and stops further training. 
-	if (isnan(sum)) { 
-		std::cout << "Somethings's causing the issue before this point!"; 
-		std::cin.get();
-		for (unsigned n = 0; n < prevLayer.size(); ++n) {
-			//std::cout << prevLayer[n].GetOutputVal() * m_inputWeights[n].weight << "\n";
-			if (isnan(prevLayer[n].GetOutputVal() * m_inputWeights[n].weight)) {
-				std::cout << "Output: " << prevLayer[n].GetOutputVal() << "\n";
-				std::cout << "Weight: " << m_inputWeights[n].weight << "\n";
-				std::cout << "Its ID: " << n << ", my ID is: " << m_myIndex << "\n";
-				std::cout << "Its type: " << prevLayer[n].GetMyType() << ", my Type: "<< m_myType << "\n";
-				std::cout << "Its Memory: " << prevLayer[n].GetCellMemory() << "\n";
-				std::cin.get();
+		//-----------------------------------------
+		//Feeding Forward
+		//Dropout on, but Testing
+		if (m_neuronSet.isDropoutActive() && !IsTraining()) {
+			float dropMod = (100.0f - m_neuronSet.GetDropout() / 100.0f);
+			for (unsigned n = 0; n < prevLayer.size(); ++n) {
+				if (prevLayer[n].IsAlive()) {
+					sum += prevLayer[n].GetOutputVal() * m_inputWeights[n].weight*dropMod;
+				}
+			}
+			if (m_neuronSet.GetSimpleRecurrency()) {
+				if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+					sum += m_prevState * m_inputWeights.back().weight*dropMod;
+				}
 			}
 		}
-		std::cin.get();
-	}
+		//Normal
+		else {
+			for (unsigned n = 0; n < prevLayer.size(); ++n) {
+				if (prevLayer[n].IsAlive()) {
+					sum += prevLayer[n].GetOutputVal() * m_inputWeights[n].weight;
+				}
+			}
+			if (m_neuronSet.GetSimpleRecurrency()) {
+				if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+					sum += m_prevState * m_inputWeights.back().weight;
+				}
+			}
+		}
+		//Added debug check for NANs, Alerts of issue and stops further training. 
+		if (isnan(sum)) {
+			std::cout << "Somethings's causing the issue before this point!";
+			std::cin.get();
+			for (unsigned n = 0; n < prevLayer.size(); ++n) {
+				//std::cout << prevLayer[n].GetOutputVal() * m_inputWeights[n].weight << "\n";
+				if (isnan(prevLayer[n].GetOutputVal() * m_inputWeights[n].weight)) {
+					std::cout << "Output: " << prevLayer[n].GetOutputVal() << "\n";
+					std::cout << "Weight: " << m_inputWeights[n].weight << "\n";
+					std::cout << "Its ID: " << n << ", my ID is: " << m_myIndex << "\n";
+					std::cout << "Its type: " << prevLayer[n].GetMyType() << ", my Type: " << m_myType << "\n";
+					std::cout << "Its Memory: " << prevLayer[n].GetCellMemory() << "\n";
+					std::cin.get();
+				}
+			}
+			std::cin.get();
+		}
 
-	m_inputVals = sum;
-	m_outputVal = Neuron::TransferFunction(m_myType, sum);
+		m_inputVals = sum;
+		m_outputVal = Neuron::TransferFunction(m_myType, sum);
+	}
 }
 
 void Neuron::FeedForwardSM(const Layer& prevLayer, const Layer& currentLayer)
@@ -107,23 +131,48 @@ void Neuron::FeedForwardSM(const Layer& prevLayer, const Layer& currentLayer)
 	else {
 		float sum = 0.0f;
 		float smMod = 0.0f;
+
+		//----------------------------------------------------
 		//Calculate SoftMax Mod
 		for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
 			sum = 0.0f;
 			for (unsigned n = 0; n < prevLayer.size(); ++n) {
-				sum += prevLayer[n].GetOutputVal() * currentLayer[clCount].m_inputWeights[n].weight;
+				if (prevLayer[n].IsAlive()) {
+					sum += prevLayer[n].GetOutputVal() * currentLayer[clCount].m_inputWeights[n].weight;
+				}
 			}
 			smMod = std::max(smMod, sum);
 		}
+		
+		//----------------------------------------------------
 		//Calculate Outputs
 		m_smSum = 0.0f;
-		for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
-			sum = 0.0f;
-			for (unsigned n = 0; n < prevLayer.size(); ++n) {
-				sum += prevLayer[n].GetOutputVal() * currentLayer[clCount].m_inputWeights[n].weight;
+		//Dropout on, but now testing.
+		if (m_neuronSet.isDropoutActive() && !IsTraining()) {
+			float dropMod = (100.0f - m_neuronSet.GetDropout() / 100.0f);
+			for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
+				sum = 0.0f;
+				for (unsigned n = 0; n < prevLayer.size(); ++n) {
+					if (prevLayer[n].IsAlive()) {
+						sum += prevLayer[n].GetOutputVal() * currentLayer[clCount].m_inputWeights[n].weight*dropMod;
+					}
+				}
+				m_smInputs.push_back(exp(sum - smMod));
+				m_smSum += exp(sum - smMod);
 			}
-			m_smInputs.push_back(exp(sum - smMod));
-			m_smSum += exp(sum - smMod);
+		}
+		//Normal
+		else {
+			for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
+				sum = 0.0f;
+				for (unsigned n = 0; n < prevLayer.size(); ++n) {
+					if (prevLayer[n].IsAlive()) {
+						sum += prevLayer[n].GetOutputVal() * currentLayer[clCount].m_inputWeights[n].weight;
+					}
+				}
+				m_smInputs.push_back(exp(sum - smMod));
+				m_smSum += exp(sum - smMod);
+			}
 		}
 		m_inputVals = m_smInputs[m_myIndex];
 		m_outputVal = m_inputVals / m_smSum;
@@ -132,33 +181,39 @@ void Neuron::FeedForwardSM(const Layer& prevLayer, const Layer& currentLayer)
 
 void Neuron::NormClipping(const float& inNorm)
 {
-	if (inNorm != 0.0f && inNorm > m_neuronSet.GetClipThreshold()) {
-		m_gradient = m_gradient*(m_neuronSet.GetClipThreshold() / inNorm);
+	if (IsAlive()) {
+		if (inNorm != 0.0f && inNorm > m_neuronSet.GetClipThreshold()) {
+			m_gradient = m_gradient * (m_neuronSet.GetClipThreshold() / inNorm);
+		}
 	}
 }
 
 void Neuron::UpdateInputWeights(Layer& prevLayer)
 {
-	//Normal Update
-	for (unsigned n = 0; n < prevLayer.size(); n++) {
-		float oldDeltaWeight = m_inputWeights[n].deltaWeight;
+	if (IsAlive()) {
+		//Normal Update
+		for (unsigned n = 0; n < prevLayer.size(); n++) {
+			if (prevLayer[n].IsAlive()) {
+				float oldDeltaWeight = m_inputWeights[n].deltaWeight;
 
-		float newDeltaWeight =
-			m_neuronSet.GetEta()*prevLayer[n].GetOutputVal()*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
+				float newDeltaWeight =
+					m_neuronSet.GetEta()*prevLayer[n].GetOutputVal()*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
 
-		m_inputWeights[n].deltaWeight = newDeltaWeight;
-		m_inputWeights[n].weight += newDeltaWeight;
-	}
-	//Update Recurrent Weight
-	if (m_neuronSet.GetSimpleRecurrency() && m_myType != 99) {
-		if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
-			float oldDeltaWeight = m_inputWeights.back().deltaWeight;
+				m_inputWeights[n].deltaWeight = newDeltaWeight;
+				m_inputWeights[n].weight += newDeltaWeight;
+			}
+		}
+		//Update Recurrent Weight
+		if (m_neuronSet.GetSimpleRecurrency() && m_myType != 99) {
+			if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+				float oldDeltaWeight = m_inputWeights.back().deltaWeight;
 
-			float newDeltaWeight =
-				m_neuronSet.GetEta()*m_prevState*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
+				float newDeltaWeight =
+					m_neuronSet.GetEta()*m_prevState*m_gradient + m_neuronSet.GetAlpha()*oldDeltaWeight;
 
-			m_inputWeights.back().deltaWeight = newDeltaWeight;
-			m_inputWeights.back().weight += newDeltaWeight;
+				m_inputWeights.back().deltaWeight = newDeltaWeight;
+				m_inputWeights.back().weight += newDeltaWeight;
+			}
 		}
 	}
 }
@@ -179,7 +234,9 @@ float Neuron::SumDOW(const Layer& nextLayer) const
 {
 	float sum = 0.0;
 	for (unsigned n = 0; n < nextLayer.size() - 1; ++n) {
-		sum += nextLayer[n].m_inputWeights[m_myIndex].weight*nextLayer[n].m_gradient;
+		if (nextLayer[n].IsAlive()) {
+			sum += nextLayer[n].m_inputWeights[m_myIndex].weight*nextLayer[n].m_gradient;
+		}
 	}
 	return sum;
 }

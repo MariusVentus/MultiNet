@@ -28,6 +28,10 @@ private:
 	bool mainDisplay;
 	bool hotToNum;
 
+	//Dropout
+	bool isDropout;
+	float dropoutPercentage;
+
 	//Gradient Clipping
 	Clipping netC = Clipping::None;
 	float clipThreshold;
@@ -75,6 +79,8 @@ public:
 	bool GetMainDisplay(void) const { return mainDisplay; }
 	bool GetHotToNum(void) const { return hotToNum; }
 	bool isLinearRestricted(void) const { return restrictLinear; }
+	bool isDropoutActive(void) const { return isDropout; }
+	float GetDropout(void) const { return dropoutPercentage; }
 
 private:
 	void InputSettings(const std::string& dataString);

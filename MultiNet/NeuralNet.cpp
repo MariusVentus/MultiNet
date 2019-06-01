@@ -4,7 +4,8 @@
 
 NeuralNet::NeuralNet(const Topology& netTop, const SettingManager& netSet)
 	:
-	m_netSet(netSet)
+	m_netSet(netSet),
+	m_rng(m_rd())
 {
 	unsigned numLayers = netTop.GetLayerCount();
 	for (unsigned layerNum = 0; layerNum < numLayers; layerNum++) {
@@ -33,6 +34,22 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 	for (unsigned i = 0; i < inputVals.size(); i++) {
 		m_layers[0][i].SetOutputVal(inputVals[i]);
 	}
+
+	//Dropout - Only on the hidden layers for now. Revive after Backprop. 
+	if (m_netSet.isDropoutActive() && IsTraining()) {
+		std::uniform_int_distribution<unsigned> dist(0, 100);
+		for (unsigned layerNum = 1; layerNum < m_layers.size() - 1; ++layerNum) {
+			if (m_layers[layerNum][0].GetMyType() != 99) {
+				//Leave -1, as Bias always alive. 
+				for (unsigned n = 0; n < m_layers[layerNum].size() - 1; ++n) {
+					if (static_cast<float>(dist(m_rng)) < m_netSet.GetDropout()) {
+						m_layers[layerNum][n].KillNeuron();
+					}
+				}
+			}
+		}
+	}
+
 	//Start from one, as the Input Layer does not need to be Fed.
 	for (unsigned layerNum = 1; layerNum < m_layers.size(); ++layerNum) {
 		Layer& prevLayer = m_layers[layerNum - 1];
@@ -113,7 +130,9 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 			hiddenLayer[n].CalcHiddenGradients(nextLayer);
 			if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
 				//Hidden l2 Norm Clipping
-				normL2 += (hiddenLayer[n].GetGradients()*hiddenLayer[n].GetGradients());
+				if (hiddenLayer[n].IsAlive()) {
+					normL2 += (hiddenLayer[n].GetGradients()*hiddenLayer[n].GetGradients());
+				}
 			}
 		}
 		//Hidden l2 Norm Clipping Continued
@@ -134,6 +153,17 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 		}
 	}
 
+	//Dropout - Revive Neurons
+	if (m_netSet.isDropoutActive()) {
+		for (unsigned layerNum = 1; layerNum < m_layers.size() - 1; ++layerNum) {
+			if (m_layers[layerNum][0].GetMyType() != 99) {
+				for (unsigned n = 0; n < m_layers[layerNum].size(); ++n) {
+					m_layers[layerNum][n].ReviveNeuron();
+				}
+			}
+		}
+	}
+
 }
 
 void NeuralNet::GetResults(std::vector<float>& resultVals) const
@@ -150,6 +180,26 @@ void NeuralNet::ClearNetMemory(void)
 	for (unsigned i = 0; i < m_layers.size(); i++) {
 		for (unsigned j = 0; j < m_layers[i].size(); j++) {
 			m_layers[i][j].ClearCellMemory();
+		}
+	}
+}
+
+void NeuralNet::FullRevive(void)
+{
+	//Dropout - Revive Neurons
+	for (unsigned layerNum = 0; layerNum < m_layers.size(); ++layerNum) {
+		for (unsigned n = 0; n < m_layers[layerNum].size(); ++n) {
+			m_layers[layerNum][n].ReviveNeuron();
+		}
+	}
+}
+
+void NeuralNet::SetTraining(const bool & set)
+{
+	m_isTraining = set;
+	for (unsigned layerNum = 0; layerNum < m_layers.size(); ++layerNum) {
+		for (unsigned n = 0; n < m_layers[layerNum].size(); ++n) {
+			m_layers[layerNum][n].SetTraining(set);
 		}
 	}
 }

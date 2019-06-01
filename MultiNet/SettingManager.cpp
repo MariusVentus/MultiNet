@@ -130,6 +130,18 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			hotToNum = Stob(line);
 		}
+		else if (line == "[Dropout]") {
+			ReadLineAndClean(inStream, line);
+			isDropout = Stob(line);
+			ReadLineAndClean(inStream, line);
+			dropoutPercentage = std::stof(line);
+			if (dropoutPercentage > 100.0f) {
+				dropoutPercentage = 100.0f;
+			}
+			else if (dropoutPercentage <= 0.0f) {
+				dropoutPercentage = 1.0f;
+			}
+		}
 		else {
 			continue;
 		}

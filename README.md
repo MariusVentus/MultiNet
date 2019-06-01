@@ -35,6 +35,5 @@ DataHandler Plans
 >Improve Randomizer.
 
 NN Plans
->Dropout(?), 
 >LSTM Neurons(?).
 

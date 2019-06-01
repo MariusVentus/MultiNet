@@ -44,6 +44,11 @@ void Cortex::ManualRun(const std::string& manIn)
 
 	//Run
 	std::cout << "Running!\n";
+	m_NN.SetTraining(false);
+	if (m_Settings.isDropoutActive()) {
+		m_NN.FullRevive();
+	}
+
 	if (manualInputs.size() == m_InputCount) {
 		std::vector<float> resultVals;
 		//Feed
@@ -94,6 +99,8 @@ void Cortex::Train(const unsigned& epochMax)
 	TimeKeeper TrainTime;
 	float totalAccuracy = 0.0f;
 	unsigned trainCount = 0;
+	m_NN.SetTraining(true);
+
 	for (unsigned epochs = 0; epochs < epochMax; ++epochs) {
 		TimeKeeper EpochTime;
 		float epochAccuracy = 0.0f;
@@ -181,6 +188,12 @@ void Cortex::Test(void)
 {
 	if (m_Input.GetMaxInputs() != m_TrainingDataSize) {
 		TimeKeeper TestTime;
+
+		m_NN.SetTraining(false);
+		if (m_Settings.isDropoutActive()) {
+			m_NN.FullRevive();
+		}
+
 		unsigned testCount = 0;
 		float errorTot = 0.0f;
 		float testAccuracy = 0.0f;

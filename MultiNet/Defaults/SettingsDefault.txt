@@ -26,6 +26,13 @@ true
 true
 
 ;;------------------------------------------------------------------------------------------
+;;Dropout: true/false
+;;Float value for Dropout percentage on Hidden Layers. 
+[Dropout]
+true
+50
+
+;;------------------------------------------------------------------------------------------
 ;;Gradient Clipping
 ;;None, Hard, L2
 ;;Clip Threshold
