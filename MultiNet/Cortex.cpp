@@ -173,14 +173,16 @@ void Cortex::Train(const unsigned& epochMax)
 			m_Output.ReloadBuffer();
 		}
 		std::cout << "\nEpoch Accuracy: " << epochAccuracy / static_cast<float>(epochCount) << "\n";
-		std::cout << "Epoch Time: " << EpochTime.Mark() << "s \n";
+		DisplayTime("Epoch", EpochTime.Mark());
+
 		//std::cin.get(); //Test Pause - Single Epoch
 		m_Input.ResetEoF();
 		m_Input.ResetLoadedCount();
 		m_Output.ResetLoadedCount();
 	}
 	std::cout << "\nTraining Accuracy: " << totalAccuracy / static_cast<float>(trainCount) << "\n";
-	std::cout << "Training Time: " << TrainTime.Mark() << "s \n";
+	DisplayTime("Training", TrainTime.Mark());
+
 	std::cout << "\n";
 }
 
@@ -252,7 +254,7 @@ void Cortex::Test(void)
 			m_Input.ReloadTestBuffer();
 			m_Output.ReloadTestBuffer();
 		}
-		std::cout << "Test Time: " << TestTime.Mark() << "s \n";
+		DisplayTime("Test", TestTime.Mark());
 		std::cout << "\n";
 		m_Input.ResetEoF();
 	}
@@ -371,6 +373,19 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
 		}
 		std::cout << "\n";
+	}
+}
+
+void Cortex::DisplayTime(const std::string& timeType, const float& inTime) const
+{
+	if (inTime <= 60.0f) {
+		std::cout << timeType << " Time: " << inTime << " seconds \n";
+	}
+	else if (inTime <= 3600.0f) {
+		std::cout << timeType << " Time: " << inTime/60.0f << " minutes \n";
+	}
+	else {
+		std::cout << timeType << " Time: " << inTime/3600.0f << " hours \n";
 	}
 }
 
