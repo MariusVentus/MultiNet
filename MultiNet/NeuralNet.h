@@ -16,6 +16,7 @@ public:
 	void ClearNetMemory(void);
 	void FullRevive(void);
 	void SetTraining(const bool& set);
+	void RefreshError(const std::vector<float>& targetVals);
 
 	float GetError(void) const { return m_error; }
 	bool IsTraining(void) const { return m_isTraining; }

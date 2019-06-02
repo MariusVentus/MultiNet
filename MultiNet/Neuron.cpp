@@ -72,7 +72,7 @@ void Neuron::FeedForward(const Layer& prevLayer)
 		//Feeding Forward
 		//Dropout on, but Testing
 		if (m_neuronSet.isDropoutActive() && !IsTraining()) {
-			float dropMod = (100.0f - m_neuronSet.GetDropout() / 100.0f);
+			float dropMod = ((100.0f - m_neuronSet.GetDropout()) / 100.0f);
 			for (unsigned n = 0; n < prevLayer.size(); ++n) {
 				if (prevLayer[n].IsAlive()) {
 					sum += prevLayer[n].GetOutputVal() * m_inputWeights[n].weight*dropMod;
@@ -149,7 +149,7 @@ void Neuron::FeedForwardSM(const Layer& prevLayer, const Layer& currentLayer)
 		m_smSum = 0.0f;
 		//Dropout on, but now testing.
 		if (m_neuronSet.isDropoutActive() && !IsTraining()) {
-			float dropMod = (100.0f - m_neuronSet.GetDropout() / 100.0f);
+			float dropMod = ((100.0f - m_neuronSet.GetDropout()) / 100.0f);
 			for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
 				sum = 0.0f;
 				for (unsigned n = 0; n < prevLayer.size(); ++n) {

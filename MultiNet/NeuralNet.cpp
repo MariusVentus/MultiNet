@@ -71,36 +71,8 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 void NeuralNet::BackProp(const std::vector<float>& targetVals)
 {
 	Layer& outputLayer = m_layers.back();
-	m_error = 0.0f;
 //Error
-	if (m_netSet.GetNetError() == SettingManager::Loss::LogLoss) {
-		//Log Loss
-		if (outputLayer.size() > 2 && outputLayer[0].GetMyType() == 99 ) {
-			//Greater than Single Output (+Bias), and with Softmax
-			for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
-				float delta = (targetVals[n] * log(outputLayer[n].GetOutputVal())); 
-				m_error += delta;
-			}
-			m_error = -m_error;
-		}
-		else {
-			for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
-				float delta = (targetVals[n] * log(outputLayer[n].GetOutputVal())) + ((1 - targetVals[n])*log(1 - outputLayer[n].GetOutputVal()));
-				m_error += delta;
-			}
-			m_error = -m_error;
-			m_error /= (outputLayer.size() - 1);
-		}
-	}
-	else {
-		//Mean Squared Error
-		for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
-			float delta = targetVals[n] - outputLayer[n].GetOutputVal();
-			m_error += delta*delta;
-		}
-		m_error /= outputLayer.size() - 1;
-		m_error = sqrt(m_error);
-	}
+	RefreshError(targetVals);
 
 //Output Gradients
 	float normL2 = 0.0f;
@@ -201,5 +173,41 @@ void NeuralNet::SetTraining(const bool & set)
 		for (unsigned n = 0; n < m_layers[layerNum].size(); ++n) {
 			m_layers[layerNum][n].SetTraining(set);
 		}
+	}
+}
+
+void NeuralNet::RefreshError(const std::vector<float>& targetVals)
+{
+	Layer& outputLayer = m_layers.back();
+	m_error = 0.0f;
+
+	//Error
+	if (m_netSet.GetNetError() == SettingManager::Loss::LogLoss) {
+		//Log Loss
+		if (outputLayer.size() > 2 && outputLayer[0].GetMyType() == 99) {
+			//Greater than Single Output (+Bias), and with Softmax
+			for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+				float delta = (targetVals[n] * log(outputLayer[n].GetOutputVal()));
+				m_error += delta;
+			}
+			m_error = -m_error;
+		}
+		else {
+			for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+				float delta = (targetVals[n] * log(outputLayer[n].GetOutputVal())) + ((1 - targetVals[n])*log(1 - outputLayer[n].GetOutputVal()));
+				m_error += delta;
+			}
+			m_error = -m_error;
+			m_error /= (outputLayer.size() - 1);
+		}
+	}
+	else {
+		//Mean Squared Error
+		for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
+			float delta = targetVals[n] - outputLayer[n].GetOutputVal();
+			m_error += delta * delta;
+		}
+		m_error /= outputLayer.size() - 1;
+		m_error = sqrt(m_error);
 	}
 }

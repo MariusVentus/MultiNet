@@ -226,6 +226,13 @@ void Cortex::Test(void)
 					DisplayTesting(i, resultVals);
 				}
 				//Error
+				if (!m_Settings.ExpandedOut()) {
+					m_NN.RefreshError(m_Output.GetRowX(i));
+				}
+				else {
+					m_NN.RefreshError(m_Output.GetExpandedRowX(i));
+				}
+				
 				errorTot += m_NN.GetError();
 				testCount++;
 				std::cout << "Error: " << m_NN.GetError() << " Avg Epoch Error: " << errorTot / static_cast<float>(testCount) << "\n";
