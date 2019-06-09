@@ -17,130 +17,134 @@ void SettingManager::InputSettings(const std::string& dataString)
 		ReadLineAndClean(inStream, line);
 		if (line == "[Eta]") {
 			ReadLineAndClean(inStream, line);
-			eta = std::stof(line);
+			m_Eta = std::stof(line);
 		}
 		else if (line == "[Alpha]") {
 			ReadLineAndClean(inStream, line);
-			alpha = std::stof(line);
+			m_Alpha = std::stof(line);
 		}
 		else if (line == "[Leak]") {
 			ReadLineAndClean(inStream, line);
-			leak = std::stof(line);
+			m_Leak = std::stof(line);
 		}
 		else if (line == "[BufferSize]") {
 			ReadLineAndClean(inStream, line);
-			bufferSize = std::stoul(line);
+			m_BufferSize = std::stoul(line);
 		}
 		else if (line == "[RandomizeTrainingData]") {
 			ReadLineAndClean(inStream, line);
-			randomizedTraining = Stob(line);
+			m_RandomizedTraining = Stob(line);
 		}
 		else if (line == "[Initialization]") {
 			ReadLineAndClean(inStream, line);
 			if (line == "Normal") {
-				netI = Initialization::Normal;
+				m_NetI = Initialization::Normal;
 			}
 			else if (line == "XavierSimple") {
-				netI = Initialization::XavierSimple;
+				m_NetI = Initialization::XavierSimple;
 			}
 			else if (line == "XavierFull") {
-				netI = Initialization::XavierFull;
+				m_NetI = Initialization::XavierFull;
 			}
 		}
 		else if (line == "[GradientClipping]") {
 			ReadLineAndClean(inStream, line);
 			if (line == "None") {
-				netC = Clipping::None;
+				m_NetC = Clipping::None;
 			}
 			else if (line == "Hard") {
-				netC = Clipping::HardClip;
+				m_NetC = Clipping::HardClip;
 			}
 			else if (line == "L2") {
-				netC = Clipping::L2Clip;
+				m_NetC = Clipping::L2Clip;
 			}
 			ReadLineAndClean(inStream, line);
-			clipThreshold = std::stof(line);
+			m_ClipThreshold = std::stof(line);
 		}
 		else if (line == "[ReservePercentage]") {
 			ReadLineAndClean(inStream, line);
-			reservePercentage = std::stof(line);
-			if (reservePercentage > 50.0f) {
-				reservePercentage = 50.0f;
+			m_ReservePercentage = std::stof(line);
+			if (m_ReservePercentage > 50.0f) {
+				m_ReservePercentage = 50.0f;
 			}
-			else if (reservePercentage < 0.0f) {
-				reservePercentage = 0.0f;
+			else if (m_ReservePercentage < 0.0f) {
+				m_ReservePercentage = 0.0f;
 			}
 		}
 		else if (line == "[NetLoss]") {
 			ReadLineAndClean(inStream, line);
 			if (line == "MeanSquared") {
-				netL = Loss::MeanSquared;
+				m_NetL = Loss::MeanSquared;
 			}
 			else if (line == "LogLoss") {
-				netL = Loss::LogLoss;
+				m_NetL = Loss::LogLoss;
 			}
 		}
 		else if (line == "[NetError]") {
 			ReadLineAndClean(inStream, line);
 			if (line == "MeanSquared") {
-				netE = Loss::MeanSquared;
+				m_NetE = Loss::MeanSquared;
 			}
 			else if (line == "LogLoss") {
-				netE = Loss::LogLoss;
+				m_NetE = Loss::LogLoss;
 			}
 		}
 		else if (line == "[SimpleRecurrency]") {
 			ReadLineAndClean(inStream, line);
-			simpleRecurrency = Stob(line);
+			m_SimpleRecurrency = Stob(line);
 		}
 		else if (line == "[RestrictLinearMemory]") {
 			ReadLineAndClean(inStream, line);
-			restrictLinear = Stob(line);
+			m_RestrictLinear = Stob(line);
 		}
 		else if (line == "[SmushedInputs]") {
 			ReadLineAndClean(inStream, line);
-			smushedInputs = Stob(line);
-			if (smushedInputs == true) {
+			m_SmushedInputs = Stob(line);
+			if (m_SmushedInputs == true) {
 				ReadLineAndClean(inStream, line);
 				if (line == "Auto" || line == "auto") {
-					autoSmush = true;
+					m_AutoSmush = true;
 				}
 				else {
-					autoSmush = false;
-					smushBy = std::stof(line);
-					if (smushBy == 0.0f) {
-						smushBy = 1.0f;
+					m_AutoSmush = false;
+					m_SmushBy = std::stof(line);
+					if (m_SmushBy == 0.0f) {
+						m_SmushBy = 1.0f;
 					}
 				}
 			}
 		}
 		else if (line == "[ExpandInput]") {
 			ReadLineAndClean(inStream, line);
-			expandIn = Stob(line);
+			m_ExpandIn = Stob(line);
 		}
 		else if (line == "[ExpandOutput]") {
 			ReadLineAndClean(inStream, line);
-			expandOut = Stob(line);
+			m_ExpandOut = Stob(line);
 		}
 		else if (line == "[MainDisplay]") {
 			ReadLineAndClean(inStream, line);
-			mainDisplay = Stob(line);
+			m_MainDisplay = Stob(line);
 		}
 		else if (line == "[VectorOutputtoNum]") {
 			ReadLineAndClean(inStream, line);
-			hotToNum = Stob(line);
+			m_HotToNum = Stob(line);
 		}
 		else if (line == "[Dropout]") {
 			ReadLineAndClean(inStream, line);
-			isDropout = Stob(line);
+			m_IsDropout = Stob(line);
 			ReadLineAndClean(inStream, line);
-			dropoutPercentage = std::stof(line);
-			if (dropoutPercentage > 100.0f) {
-				dropoutPercentage = 100.0f;
+			m_DropoutPercentage = std::stof(line);
+			if (m_DropoutPercentage > 100.0f) {
+				m_DropoutPercentage = 100.0f;
 			}
-			else if (dropoutPercentage <= 0.0f) {
-				dropoutPercentage = 1.0f;
+			else if (m_DropoutPercentage <= 0.0f) {
+				m_DropoutPercentage = 1.0f;
 			}
+		}
+		else if (line == "[PermanentMemory]") {
+			ReadLineAndClean(inStream, line);
+			m_PermMem = Stob(line);
 		}
 		else {
 			continue;

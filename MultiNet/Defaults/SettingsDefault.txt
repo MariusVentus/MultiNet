@@ -69,3 +69,5 @@ LogLoss
 false
 [Restrict Linear Memory] ;;Help prevent NANs by stopping Neurons with Linear Transformations from using memory. 
 true
+[Permanent Memory]
+false

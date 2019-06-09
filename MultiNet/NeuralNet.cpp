@@ -36,7 +36,7 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 	}
 
 	//Dropout - Only on the hidden layers for now. Revive after Backprop. 
-	if (m_netSet.isDropoutActive() && IsTraining()) {
+	if (m_netSet.IsDropoutActive() && IsTraining()) {
 		std::uniform_int_distribution<unsigned> dist(0, 100);
 		for (unsigned layerNum = 1; layerNum < m_layers.size() - 1; ++layerNum) {
 			if (m_layers[layerNum][0].GetMyType() != 99) {
@@ -126,7 +126,7 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 	}
 
 	//Dropout - Revive Neurons
-	if (m_netSet.isDropoutActive()) {
+	if (m_netSet.IsDropoutActive()) {
 		for (unsigned layerNum = 1; layerNum < m_layers.size() - 1; ++layerNum) {
 			if (m_layers[layerNum][0].GetMyType() != 99) {
 				for (unsigned n = 0; n < m_layers[layerNum].size(); ++n) {

@@ -15,42 +15,43 @@ public:
 
 private:
 	//Data
-	unsigned bufferSize;
-	bool randomizedTraining;
-	float reservePercentage;
-	bool smushedInputs;
-	bool autoSmush;
-	float smushBy;
-	bool expandIn;
-	bool expandOut;
+	unsigned m_BufferSize;
+	bool m_RandomizedTraining;
+	float m_ReservePercentage;
+	bool m_SmushedInputs;
+	bool m_AutoSmush;
+	float m_SmushBy;
+	bool m_ExpandIn;
+	bool m_ExpandOut;
 
 	//Display
-	bool mainDisplay;
-	bool hotToNum;
+	bool m_MainDisplay;
+	bool m_HotToNum;
 
 	//Dropout
-	bool isDropout;
-	float dropoutPercentage;
+	bool m_IsDropout;
+	float m_DropoutPercentage;
 
 	//Gradient Clipping
-	Clipping netC = Clipping::None;
-	float clipThreshold;
+	Clipping m_NetC = Clipping::None;
+	float m_ClipThreshold;
 
 	//Initialization
-	Initialization netI;
+	Initialization m_NetI;
 
 	//Learning
-	float eta;
-	float alpha;
-	float leak; //For the Relu.
+	float m_Eta;
+	float m_Alpha;
+	float m_Leak; //For the Relu.
 
 	//Loss (for Optimization) and Error (for reporting).
-	Loss netL;
-	Loss netE;
+	Loss m_NetL;
+	Loss m_NetE;
 
 	//Simple Recurrency
-	bool simpleRecurrency; 
-	bool restrictLinear;
+	bool m_SimpleRecurrency; 
+	bool m_RestrictLinear;
+	bool m_PermMem;
 
 //Functions
 public:
@@ -58,29 +59,30 @@ public:
 	SettingManager(const std::string& setFile);
 
 
-	bool ExpandedIn(void) const { return expandIn; }
-	bool ExpandedOut(void) const { return expandOut; }
+	bool ExpandedIn(void) const { return m_ExpandIn; }
+	bool ExpandedOut(void) const { return m_ExpandOut; }
 
-	float GetAlpha(void) const { return alpha; }
-	unsigned GetBufferSize(void) const { return bufferSize; }
-	Clipping GetClipping(void) const { return netC; }
-	float GetClipThreshold(void) const { return clipThreshold; }
-	float GetEta(void) const { return eta; }
-	Initialization GetInit(void) const { return netI; }
-	float GetLeak(void) const { return leak; }
-	Loss GetNetLoss(void) const { return netL; }
-	Loss GetNetError(void) const { return netE; }
-	bool GetRandTrainData(void) const { return randomizedTraining; }
-	float GetReservePercentage(void) const { return reservePercentage; }
-	bool GetSimpleRecurrency(void) const { return simpleRecurrency; }
-	bool GetSmushedIn(void) const { return smushedInputs; }
-	bool GetAutoSmush(void) const { return autoSmush; }
-	float GetSmushVal(void) const { return smushBy; }
-	bool GetMainDisplay(void) const { return mainDisplay; }
-	bool GetHotToNum(void) const { return hotToNum; }
-	bool isLinearRestricted(void) const { return restrictLinear; }
-	bool isDropoutActive(void) const { return isDropout; }
-	float GetDropout(void) const { return dropoutPercentage; }
+	float GetAlpha(void) const { return m_Alpha; }
+	unsigned GetBufferSize(void) const { return m_BufferSize; }
+	Clipping GetClipping(void) const { return m_NetC; }
+	float GetClipThreshold(void) const { return m_ClipThreshold; }
+	float GetEta(void) const { return m_Eta; }
+	Initialization GetInit(void) const { return m_NetI; }
+	float GetLeak(void) const { return m_Leak; }
+	Loss GetNetLoss(void) const { return m_NetL; }
+	Loss GetNetError(void) const { return m_NetE; }
+	bool GetRandTrainData(void) const { return m_RandomizedTraining; }
+	float GetReservePercentage(void) const { return m_ReservePercentage; }
+	bool GetSimpleRecurrency(void) const { return m_SimpleRecurrency; }
+	bool GetSmushedIn(void) const { return m_SmushedInputs; }
+	bool GetAutoSmush(void) const { return m_AutoSmush; }
+	float GetSmushVal(void) const { return m_SmushBy; }
+	bool GetMainDisplay(void) const { return m_MainDisplay; }
+	bool GetHotToNum(void) const { return m_HotToNum; }
+	bool IsLinearRestricted(void) const { return m_RestrictLinear; }
+	bool IsDropoutActive(void) const { return m_IsDropout; }
+	float GetDropout(void) const { return m_DropoutPercentage; }
+	bool IsMemPerm(void) const { return m_PermMem; }
 
 private:
 	void InputSettings(const std::string& dataString);

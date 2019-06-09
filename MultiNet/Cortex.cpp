@@ -45,7 +45,7 @@ void Cortex::ManualRun(const std::string& manIn)
 	//Run
 	std::cout << "Running!\n";
 	m_NN.SetTraining(false);
-	if (m_Settings.isDropoutActive()) {
+	if (m_Settings.IsDropoutActive()) {
 		m_NN.FullRevive();
 	}
 
@@ -192,7 +192,7 @@ void Cortex::Test(void)
 		TimeKeeper TestTime;
 
 		m_NN.SetTraining(false);
-		if (m_Settings.isDropoutActive()) {
+		if (m_Settings.IsDropoutActive()) {
 			m_NN.FullRevive();
 		}
 

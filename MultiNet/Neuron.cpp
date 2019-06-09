@@ -14,7 +14,7 @@ Neuron::Neuron(const SettingManager& nSet, unsigned numInputs, unsigned numOutpu
 
 	unsigned effectiveInputs = numInputs;
 	if (nSet.GetSimpleRecurrency() && myType != 99 && myType != 0) {
-		if (!nSet.isLinearRestricted() || (myType != 1 && myType != 4)) {
+		if (!nSet.IsLinearRestricted() || (myType != 1 && myType != 4)) {
 			effectiveInputs++;
 		}
 	}
@@ -66,12 +66,10 @@ void Neuron::FeedForward(const Layer& prevLayer)
 	if (IsAlive()) {
 		float sum = 0.0f;
 
-		m_prevState = m_outputVal;
-
 		//-----------------------------------------
 		//Feeding Forward
 		//Dropout on, but Testing
-		if (m_neuronSet.isDropoutActive() && !IsTraining()) {
+		if (m_neuronSet.IsDropoutActive() && !IsTraining()) {
 			float dropMod = ((100.0f - m_neuronSet.GetDropout()) / 100.0f);
 			for (unsigned n = 0; n < prevLayer.size(); ++n) {
 				if (prevLayer[n].IsAlive()) {
@@ -79,7 +77,7 @@ void Neuron::FeedForward(const Layer& prevLayer)
 				}
 			}
 			if (m_neuronSet.GetSimpleRecurrency()) {
-				if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+				if (!m_neuronSet.IsLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
 					sum += m_prevState * m_inputWeights.back().weight*dropMod;
 				}
 			}
@@ -92,7 +90,7 @@ void Neuron::FeedForward(const Layer& prevLayer)
 				}
 			}
 			if (m_neuronSet.GetSimpleRecurrency()) {
-				if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+				if (!m_neuronSet.IsLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
 					sum += m_prevState * m_inputWeights.back().weight;
 				}
 			}
@@ -117,6 +115,8 @@ void Neuron::FeedForward(const Layer& prevLayer)
 
 		m_inputVals = sum;
 		m_outputVal = Neuron::TransferFunction(m_myType, sum);
+		m_prevState = m_outputVal;
+
 	}
 }
 
@@ -148,7 +148,7 @@ void Neuron::FeedForwardSM(const Layer& prevLayer, const Layer& currentLayer)
 		//Calculate Outputs
 		m_smSum = 0.0f;
 		//Dropout on, but now testing.
-		if (m_neuronSet.isDropoutActive() && !IsTraining()) {
+		if (m_neuronSet.IsDropoutActive() && !IsTraining()) {
 			float dropMod = ((100.0f - m_neuronSet.GetDropout()) / 100.0f);
 			for (unsigned clCount = 0; clCount < currentLayer.size() - 1; ++clCount) {
 				sum = 0.0f;
@@ -205,7 +205,7 @@ void Neuron::UpdateInputWeights(Layer& prevLayer)
 		}
 		//Update Recurrent Weight
 		if (m_neuronSet.GetSimpleRecurrency() && m_myType != 99) {
-			if (!m_neuronSet.isLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
+			if (!m_neuronSet.IsLinearRestricted() || (m_myType != 1 && m_myType != 4)) {
 				float oldDeltaWeight = m_inputWeights.back().deltaWeight;
 
 				float newDeltaWeight =

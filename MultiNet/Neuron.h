@@ -39,7 +39,7 @@ public:
 	void SetOutputVal(float val) { m_outputVal = val; }
 	float GetsmSum(void) const { return m_smSum; }
 	float GetsmInputs(unsigned indexNum) const { return m_smInputs[indexNum]; }
-	void ClearCellMemory(void) { m_prevState = 0.0f; }
+	void ClearCellMemory(void) { if (!m_neuronSet.IsMemPerm()) { m_prevState = 0.0f; } }
 	float GetCellMemory(void) const { return m_prevState; }
 
 	bool IsAlive(void) const { return m_isAlive; }
