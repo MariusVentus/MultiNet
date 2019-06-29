@@ -107,7 +107,7 @@ void Cortex::Train(const unsigned& epochMax)
 		unsigned epochCount = 0;
 		float errorTot = 0.0f;
 		
-		if (m_Settings.GetSimpleRecurrency()) {
+		if (m_Settings.GetSimpleRecurrency() && !m_Settings.IsMemPerm()) {
 			m_NN.ClearNetMemory();
 		}
 
