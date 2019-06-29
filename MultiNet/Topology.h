@@ -12,6 +12,8 @@ private:
 	Leaky Relu = 4
 	Gaussian = 5
 
+	Sine = 50
+
 	SoftMax = 99
 	*/
 

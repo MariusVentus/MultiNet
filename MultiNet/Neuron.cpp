@@ -288,6 +288,8 @@ float Neuron::TransferFunction(unsigned inType, float x)
 		}
 		//Gaussian
 	case 5:	return exp(-(x*x));
+		//Sine
+	case 50: return sin(x);
 
 		//If nothing else, run the neurons as they were originally written. 
 	default: return tanh(x);
@@ -318,7 +320,8 @@ float Neuron::TransferFunctionDerivative(unsigned inType, float x)
 		}
 		//Gaussian
 	case 5:	return -2.0f * x*exp(-(x*x));
-
+		//Sine
+	case 50: return cos(x);
 
 		//If nothing else, run the neurons as they were originally written. 
 	default: return (1.0f - tanh(x) * tanh(x));

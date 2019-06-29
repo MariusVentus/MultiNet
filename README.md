@@ -7,7 +7,7 @@ in the field. However, many aspects of it were unrefined, so this will be a clea
 
 --Current Features--
 
-Supports Linear, Sigmoid, Tanh, Relu, Gaussian, Bias, and SoftMax Neurons. 
+Supports Linear, Sigmoid, Tanh, Relu, Gaussian, Bias, Sine, and SoftMax Neurons. 
 Topology and Settings files can be customized to tailor individual runs. 
 Training Data can be fed randomly to the net. A portion of that data can be set aside for testing. 
 After Training and Testing, Manual Inputs can be entered to use the newly trained net. 

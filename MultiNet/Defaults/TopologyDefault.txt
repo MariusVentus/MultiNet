@@ -2,7 +2,7 @@
 ;;Mono = Type, Count, Repeat
 ;;Mixed = Count, Repeat
 ;;Custom = Type,Count,Type,Count,Type, Count, Repeat
-;;Types include Bias, Linear, Sigmoid, Tanh, Relu, Gaussian. Bias neurons are automatically generated each layer, regardless if more are added.
+;;Types include Bias, Linear, Sigmoid, Tanh, Relu, Gaussian, and Sine. Bias neurons are automatically generated each layer, regardless if more are added.
 ;;There is also the SotMax Neuron. Only Mono and Output Layers support SoftMax, and it requires at least two SoftMax Neurons in the Layer.
 ;;Input/Output can be set to count "Auto" which matches the first input and output respectively. Usually safest to leave Auto.
 ;;Input and Ouput act like Monolayers, but should still be placed at the beginning and end of the Net respectively. All other layers can be placed, rearranged, or duplicated as needed. 

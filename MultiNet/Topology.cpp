@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 
-Topology::Topology(const std::string & setTop, const unsigned& inputSize, const unsigned& outputSize)
+Topology::Topology(const std::string& setTop, const unsigned& inputSize, const unsigned& outputSize)
 {
 	std::ifstream inTop(setTop);
 	InputTop(inTop, inputSize, outputSize);
@@ -291,6 +291,9 @@ unsigned Topology::TypeCheck(const std::string & inType)
 	}
 	else if (inType == "Gaussian") {
 		return 5;
+	}
+	else if (inType == "Sine") {
+		return 50;
 	}
 	else if (inType == "SoftMax") {
 		return 99;
