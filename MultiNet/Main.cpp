@@ -10,14 +10,15 @@ int main() {
 	Cortex Brain("Settings\\Settings.txt", "Topologies\\Topology.txt", "Data\\input.txt", "Data\\output.txt");
 	IOCustom IO;
 
+	if (IO.YnQ("Do you want to load the previous Save?")) {
+		Brain.Load();
+	}
+
 	do {
-		if (IO.YnQ("Do you want to load the previous Save?")) {
-			Brain.Load();
-		}
-		else {
-			std::cout << "Training.\n";
-			Brain.Train(IO.HowMany("Epochs"));
-		}
+
+		std::cout << "Training.\n";
+		int epochs = IO.HowMany("Epochs");
+		if (epochs != 0) { Brain.Train(epochs); }
 
 		if (IO.YnQ("Would you like to test against reserved data?")) {
 			std::cout << "\nTesting.\n";

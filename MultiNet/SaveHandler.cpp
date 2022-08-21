@@ -37,6 +37,10 @@ SaveHandler::SaveHandler(const std::string& saveFile)
 			m_Network.append(token);
 
 		} while (!in.eof());
+		m_LoadSuccess = true;
+	}
+	else {
+		m_LoadSuccess = false;
 	}
 
 }

@@ -80,13 +80,13 @@ void Cortex::ManualRun(const std::string& manIn)
 
 		//Display Results and Outputs
 		std::cout << "Output: ";
-		if (!m_Settings.GetHotToNum()) {
+		if (m_Settings.GetHotToNum() && resultVals.size() != 1) {
+			std::cout << DataHandler::GetMaxArrLoc(resultVals);
+		}
+		else {		
 			for (unsigned j = 0; j < resultVals.size(); j++) {
 				std::cout << resultVals[j] << " ";
 			}
-		}
-		else {
-			std::cout << DataHandler::GetMaxArrLoc(resultVals);
 		}
 		std::cout << "\n\n";
 	}
@@ -280,7 +280,12 @@ void Cortex::Save(void)
 void Cortex::Load(void)
 {
 	SaveHandler Loader("Saves\\Save.txt");
-	m_NN.OverwriteNeuralNet(Loader.GetNetString());
+	if (Loader.m_LoadSuccess) {
+		m_NN.OverwriteNeuralNet(Loader.GetNetString());
+	}
+	else {
+		std::cout << "Load Failure. Using New Net from Topology.\n";
+	}
 }
 
 void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResultVals) const
@@ -315,25 +320,25 @@ void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResult
 	//Targets
 	if (m_Settings.ExpandedOut()) {
 		std::cout << "Target: ";
-		if (!m_Settings.GetHotToNum()) {
+		if (m_Settings.GetHotToNum()) {
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetExpandedRowX(buffRow));
+		}
+		else {
 			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 				std::cout << m_Output.GetExpandedRowX(buffRow)[j] << " ";
 			}
-		}
-		else {
-			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetExpandedRowX(buffRow));
 		}
 		std::cout << "\n";
 	}
 	else {
 		std::cout << "Target: ";
-		if (!m_Settings.GetHotToNum()) {
+		if (m_Settings.GetHotToNum() && m_Output.GetORowSize() != 1) {
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetRowX(buffRow));
+		}
+		else {
 			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 				std::cout << m_Output.GetRowX(buffRow)[j] << " ";
 			}
-		}
-		else {
-			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetRowX(buffRow));
 		}
 		std::cout << "\n";
 	}
@@ -358,37 +363,37 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 	}
 	//Results and Outputs
 	std::cout << "Output: ";
-	if (!m_Settings.GetHotToNum()) {
+	if (m_Settings.GetHotToNum() && m_Output.GetORowSize() != 1) {
+		std::cout << DataHandler::GetMaxArrVal(inResultVals);
+	}
+	else {
 		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 			std::cout << inResultVals[j] << " ";
 		}
-	}
-	else {
-		std::cout << DataHandler::GetMaxArrVal(inResultVals);
 	}
 	std::cout << "\n";
 	//Targets
 	if (m_Settings.ExpandedOut()) {
 		std::cout << "Target: ";
-		if (!m_Settings.GetHotToNum()) {
+		if (m_Settings.GetHotToNum()) {
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetExpandedRowX(m_rng.GetSelect(buffRow)));
+		}
+		else {
 			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 				std::cout << m_Output.GetExpandedRowX(m_rng.GetSelect(buffRow))[j] << " ";
 			}
-		}
-		else {
-			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetExpandedRowX(m_rng.GetSelect(buffRow)));
 		}
 		std::cout << "\n";
 	}
 	else {
 		std::cout << "Target: ";
-		if (!m_Settings.GetHotToNum()) {
+		if (m_Settings.GetHotToNum() && m_Output.GetORowSize() != 1) {
+			std::cout << DataHandler::GetMaxArrVal(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
+		}
+		else {
 			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 				std::cout << m_Output.GetRowX(m_rng.GetSelect(buffRow))[j] << " ";
 			}
-		}
-		else {
-			std::cout << DataHandler::GetMaxArrVal(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
 		}
 		std::cout << "\n";
 	}

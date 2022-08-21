@@ -10,6 +10,9 @@ public:
 	SaveHandler(const std::string& saveFile);
 	std::string GetNetString(void) const { return m_Network; }
 
+	//Vars
+	bool m_LoadSuccess = false;
+
 private:
 	std::string m_Network;
 
