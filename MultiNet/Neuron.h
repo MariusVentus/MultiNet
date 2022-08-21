@@ -54,6 +54,8 @@ public:
 	bool IsTraining(void) const { return m_isTraining; }
 	void SetTraining(const bool& set) { m_isTraining = set; }
 
+	void OverwriteWeights(const std::vector<float>& inVec);
+
 private:
 //Variables
 	SettingManager m_neuronSet;

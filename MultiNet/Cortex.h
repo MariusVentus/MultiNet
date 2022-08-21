@@ -17,6 +17,7 @@ public:
 	void Train(const unsigned& epochMax);
 	void Test(void);
 	void Save(void);
+	void Load(void);
 
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 private:

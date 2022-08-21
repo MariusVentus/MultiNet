@@ -11,8 +11,13 @@ int main() {
 	IOCustom IO;
 
 	do {
-		std::cout << "Training.\n";
-		Brain.Train(IO.HowMany("Epochs"));
+		if (IO.YnQ("Do you want to load the previous Save?")) {
+			Brain.Load();
+		}
+		else {
+			std::cout << "Training.\n";
+			Brain.Train(IO.HowMany("Epochs"));
+		}
 
 		if (IO.YnQ("Would you like to test against reserved data?")) {
 			std::cout << "\nTesting.\n";

@@ -155,19 +155,22 @@ void Cortex::Train(const unsigned& epochMax)
 				epochCount++;
 				std::cout << "Error: " << m_NN.GetError() << " Avg Epoch Error: " << errorTot / static_cast<float>(epochCount) << "\n";
 				//Accuracy
+				std::string correct = "False";
 				if (!m_Settings.ExpandedOut()) {
 					if (CheckAccuracy(resultVals, m_Output.GetRowX(m_rng.GetSelect(i)))) {
 						epochAccuracy++;
 						totalAccuracy++;
+						correct = "True";
 					}
 				}
 				else {
 					if (CheckAccuracy(resultVals, m_Output.GetExpandedRowX(m_rng.GetSelect(i)))) {
 						epochAccuracy++;
 						totalAccuracy++;
+						correct = "True";
 					}
 				}
-				std::cout << "Accuracy: " << epochAccuracy / static_cast<float>(epochCount) << "\n";
+				std::cout << "Correct:" << correct << " Accuracy: " << epochAccuracy / static_cast<float>(epochCount) << "\n";
 				trainCount++;
 			}
 			m_Input.ReloadBuffer();
@@ -240,17 +243,20 @@ void Cortex::Test(void)
 				testCount++;
 				std::cout << "Error: " << m_NN.GetError() << " Avg Epoch Error: " << errorTot / static_cast<float>(testCount) << "\n";
 				//Accuracy
+				std::string correct = "False";
 				if (!m_Settings.ExpandedOut()) {
 					if (CheckAccuracy(resultVals, m_Output.GetRowX(i))) {
 						testAccuracy++;
+						correct = "True";
 					}
 				}
 				else {
 					if (CheckAccuracy(resultVals, m_Output.GetExpandedRowX(i))) {
 						testAccuracy++;
+						correct = "True";
 					}
 				}
-				std::cout << "Test Accuracy: " << testAccuracy / static_cast<float>(testCount) << "\n";
+				std::cout << "Correct:" << correct << " Test Accuracy: " << testAccuracy / static_cast<float>(testCount) << "\n";
 			}
 			m_Input.ReloadTestBuffer();
 			m_Output.ReloadTestBuffer();
@@ -269,6 +275,12 @@ void Cortex::Test(void)
 void Cortex::Save(void)
 {
 	SaveHandler Saver(m_NN);
+}
+
+void Cortex::Load(void)
+{
+	SaveHandler Loader("Saves\\Save.txt");
+	m_NN.OverwriteNeuralNet(Loader.GetNetString());
 }
 
 void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResultVals) const
@@ -290,13 +302,13 @@ void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResult
 	}
 	//Results and Outputs
 	std::cout << "Output: ";
-	if (!m_Settings.GetHotToNum()) {
+	if (m_Settings.GetHotToNum() && m_Output.GetORowSize() != 1) {
+		std::cout << DataHandler::GetMaxArrLoc(inResultVals);
+	}
+	else {
 		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
 			std::cout << inResultVals[j] << " ";
 		}
-	}
-	else {
-		std::cout << DataHandler::GetMaxArrLoc(inResultVals);
 	}
 	std::cout << "\n";
 

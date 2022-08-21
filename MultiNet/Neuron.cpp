@@ -227,6 +227,15 @@ std::vector<float> Neuron::GetWeightVec(void) const
 	return weightVec;
 }
 
+void Neuron::OverwriteWeights(const std::vector<float>& inVec)
+{
+	m_inputWeights.clear();
+	for (unsigned i = 0; i < inVec.size(); i++) {
+		m_inputWeights.emplace_back(Synapse());
+		m_inputWeights.back().weight = inVec[i];
+	}
+}
+
 void Neuron::HardClipping(void)
 {
 	if (m_neuronSet.GetClipping() == SettingManager::Clipping::HardClip) {

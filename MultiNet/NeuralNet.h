@@ -10,6 +10,7 @@ class NeuralNet {
 
 public:
 	NeuralNet(const Topology& netTop, const SettingManager& netSet);
+	void OverwriteNeuralNet(const std::string& fileData);
 	void FeedForward(const std::vector<float>& inputVals);
 	void BackProp(const std::vector<float>& targetVals);
 	void GetResults(std::vector<float>& resultVals) const;

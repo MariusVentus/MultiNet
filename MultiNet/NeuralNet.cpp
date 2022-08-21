@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <sstream>
 #include "NeuralNet.h"
 
 NeuralNet::NeuralNet(const Topology& netTop, const SettingManager& netSet)
@@ -26,6 +27,47 @@ NeuralNet::NeuralNet(const Topology& netTop, const SettingManager& netSet)
 
 	}
 }
+
+void NeuralNet::OverwriteNeuralNet(const std::string& fileData)
+{
+	m_layers.clear();
+	std::cout << "Generating Neural Network from Save. Caution: Will use current Settings.";
+	std::stringstream inNet(fileData);
+	std::string token = "";
+
+	unsigned lIndex = 0;
+	unsigned nIndex = 0;
+	std::vector<float> wVec;
+	do {
+		token.clear();
+		std::getline(inNet, token, ',');
+		if (token != "") {
+			if (token.find("L") != std::string::npos) {
+				m_layers.push_back(Layer());
+				std::cout << "\nLayer" << lIndex << ": "; //Really need to get this console code out of the actual network.
+				nIndex = 0;
+				lIndex++;
+			}
+			else if (token.find("N") != std::string::npos) {
+				//Add Vec, Clear, then create new Neuron
+				if (nIndex != 0) {
+					m_layers.back().back().OverwriteWeights(wVec);
+					wVec.clear();
+				}
+				//Begin New Neuron spot. 
+				std::string type = token.substr(token.find("N") + 1);
+				m_layers.back().push_back(Neuron(m_netSet, 0, 0, nIndex, std::stoul(type)));
+				if (std::stoul(type) == 0) { m_layers.back().back().SetOutputVal(1.0f); }
+				nIndex++;
+			}
+			else {
+				wVec.push_back(std::stof(token));
+			}
+		}
+	} while (!inNet.eof());
+	std::cout << "\n\n";
+}
+
 
 void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 {

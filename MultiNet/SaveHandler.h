@@ -4,8 +4,11 @@
 
 class SaveHandler {
 public:
+	//Saving Constructor
 	SaveHandler(const NeuralNet& inNet);
-	//SaveHandler(const std::string& saveFile);
+	//Loading Consructor
+	SaveHandler(const std::string& saveFile);
+	std::string GetNetString(void) const { return m_Network; }
 
 private:
 	std::string m_Network;
