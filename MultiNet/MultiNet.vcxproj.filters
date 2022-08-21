@@ -54,6 +54,9 @@
     <ClInclude Include="IOCustom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SaveHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IOCustom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

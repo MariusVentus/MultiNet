@@ -16,6 +16,7 @@ public:
 	void ManualRun(const std::string& manIn);
 	void Train(const unsigned& epochMax);
 	void Test(void);
+	void Save(void);
 
 	unsigned GetTrainingDataSize(void) const { return m_TrainingDataSize; }
 private:

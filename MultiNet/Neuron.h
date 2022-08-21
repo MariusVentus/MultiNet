@@ -46,6 +46,7 @@ public:
 		assert(!m_neuronSet.IsMemPerm());
 		m_prevState = 0.0f; }
 	float GetCellMemory(void) const { return m_prevState; }
+	std::vector<float> GetWeightVec(void) const;
 
 	bool IsAlive(void) const { return m_isAlive; }
 	void KillNeuron(void) { m_isAlive = false; }

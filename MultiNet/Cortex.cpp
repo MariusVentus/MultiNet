@@ -1,5 +1,6 @@
 #include "Cortex.h"
 #include "TimeKeeper.h"
+#include "SaveHandler.h"
 #include <assert.h>
 #include <cmath>
 #include <iostream>
@@ -263,6 +264,11 @@ void Cortex::Test(void)
 	}
 	m_Input.ResetDh();
 	m_Output.ResetDh();
+}
+
+void Cortex::Save(void)
+{
+	SaveHandler Saver(m_NN);
 }
 
 void Cortex::DisplayTesting(unsigned buffRow, const std::vector<float>& inResultVals) const

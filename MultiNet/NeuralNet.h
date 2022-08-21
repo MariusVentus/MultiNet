@@ -21,6 +21,11 @@ public:
 	float GetError(void) const { return m_error; }
 	bool IsTraining(void) const { return m_isTraining; }
 
+	unsigned GetLayerCount(void) const { return (unsigned)m_layers.size(); }
+	unsigned GetNCount(unsigned layerNum) const { return (unsigned)m_layers[layerNum].size(); }
+	unsigned GetNType(unsigned lNum, unsigned nNum) const { return (unsigned)m_layers[lNum][nNum].GetMyType(); }
+	std::vector<float> GetNWeightVec(unsigned lNum, unsigned nNum) const { return m_layers[lNum][nNum].GetWeightVec(); }
+
 private:
 //Vars
 	std::vector<Layer>m_layers;

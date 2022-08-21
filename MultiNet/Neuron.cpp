@@ -218,6 +218,15 @@ void Neuron::UpdateInputWeights(Layer& prevLayer)
 	}
 }
 
+std::vector<float> Neuron::GetWeightVec(void) const
+{
+	std::vector<float> weightVec;
+	for (unsigned i = 0; i < m_inputWeights.size(); i++) {
+		weightVec.push_back(m_inputWeights[i].weight);
+	}
+	return weightVec;
+}
+
 void Neuron::HardClipping(void)
 {
 	if (m_neuronSet.GetClipping() == SettingManager::Clipping::HardClip) {

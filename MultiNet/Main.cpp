@@ -30,6 +30,10 @@ int main() {
 
 	} while (IO.YnQ("Continue Training?"));
 
+	if (IO.YnQ("Do you want to save the Network?")) {
+		Brain.Save();
+	}
+
 	std::cout << "Complete. Press Any Key to end." << std::endl;
 
 	std::cin.get();

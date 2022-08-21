@@ -116,6 +116,7 @@
     <ClInclude Include="NeuralNet.h" />
     <ClInclude Include="Neuron.h" />
     <ClInclude Include="RandHandler.h" />
+    <ClInclude Include="SaveHandler.h" />
     <ClInclude Include="SettingManager.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Topology.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="NeuralNet.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="RandHandler.cpp" />
+    <ClCompile Include="SaveHandler.cpp" />
     <ClCompile Include="SettingManager.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
     <ClCompile Include="Topology.cpp" />
