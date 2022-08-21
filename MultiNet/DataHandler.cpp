@@ -19,6 +19,11 @@ unsigned DataHandler::GetMaxArrLoc(const std::vector<float>& inArr)
 	return static_cast<unsigned>(std::distance(inArr.begin(), std::max_element(inArr.begin(), inArr.end())));
 }
 
+float DataHandler::GetMaxArrVal(const std::vector<float>& inArr)
+{
+	return inArr[GetMaxArrLoc(inArr)];
+}
+
 std::vector<float> DataHandler::GetExpandedRowX(unsigned inX) const
 {
 	if (dataBuffer[0].size() == 1) {

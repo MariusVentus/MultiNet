@@ -346,7 +346,7 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 		}
 	}
 	else {
-		std::cout << DataHandler::GetMaxArrLoc(inResultVals);
+		std::cout << DataHandler::GetMaxArrVal(inResultVals);
 	}
 	std::cout << "\n";
 	//Targets
@@ -370,7 +370,7 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 			}
 		}
 		else {
-			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
+			std::cout << DataHandler::GetMaxArrVal(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
 		}
 		std::cout << "\n";
 	}

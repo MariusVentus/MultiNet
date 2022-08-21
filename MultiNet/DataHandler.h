@@ -33,6 +33,7 @@ public:
 	float GetMaxValArrX(const unsigned inX) const { return m_MaxValArr[inX]; }
 
 	static unsigned GetMaxArrLoc(const std::vector<float>& inArr);
+	static float GetMaxArrVal(const std::vector<float>& inArr);
 	std::vector<float> GetExpandedRowX(unsigned inX) const;
 	unsigned GetIRowSize(void) const;
 	unsigned GetORowSize(void) const;
