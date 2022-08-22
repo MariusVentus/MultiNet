@@ -5,7 +5,7 @@ class SettingManager {
 //Variables
 public:
 	//Clipping
-	enum class Clipping { None, HardClip, L2Clip };
+	enum class Clipping { None, HardClip, NormClip };
 
 	//Initialization
 	enum class Initialization { Normal, XavierSimple, XavierFull};

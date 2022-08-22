@@ -34,7 +34,7 @@ true
 
 ;;------------------------------------------------------------------------------------------
 ;;Gradient Clipping
-;;None, Hard, L2
+;;None, Hard, Norm
 ;;Clip Threshold
 [Gradient Clipping]
 None
@@ -56,7 +56,7 @@ XavierFull
 0.01
 
 ;;------------------------------------------------------------------------------------------
-;;Loss and Error
+;;Loss (for Optimization) and Error (for Reporting).
 ;;MeanSquared, LogLoss (Cross Entropy)
 [Net Loss]
 LogLoss

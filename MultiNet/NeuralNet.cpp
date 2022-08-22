@@ -117,19 +117,19 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 	RefreshError(targetVals);
 
 //Output Gradients
-	float normL2 = 0.0f;
+	float clipNormal = 0.0f;
 	for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
 		outputLayer[n].CalcOutputGradients(targetVals[n]);
-		//Output l2 Norm Clipping
-		if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
-			normL2 += (outputLayer[n].GetGradients()*outputLayer[n].GetGradients());
+		//Output Norm Clipping
+		if (m_netSet.GetClipping() == SettingManager::Clipping::NormClip) {
+			clipNormal += (outputLayer[n].GetGradients()*outputLayer[n].GetGradients());
 		}
 	}
-	//Output l2 Norm Clipping Continued
-	if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
-		normL2 = sqrt(normL2);
+	//Output Norm Clipping Continued
+	if (m_netSet.GetClipping() == SettingManager::Clipping::NormClip) {
+		clipNormal = sqrt(clipNormal);
 		for (unsigned n = 0; n < outputLayer.size() - 1; ++n) {
-			outputLayer[n].NormClipping(normL2);
+			outputLayer[n].NormClipping(clipNormal);
 		}
 	}
 
@@ -137,23 +137,23 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 	for (unsigned layerNum = unsigned(m_layers.size()) - 2; layerNum > 0; layerNum--) {
 		Layer& hiddenLayer = m_layers[layerNum];
 		Layer& nextLayer = m_layers[layerNum + 1];
-		normL2 = 0.0f;
+		clipNormal = 0.0f;
 
 		//Last Neuron in a Layer is always Bias. Slight optimization with -1. 
 		for (unsigned n = 0; n < hiddenLayer.size() - 1; ++n) {
 			hiddenLayer[n].CalcHiddenGradients(nextLayer);
-			if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
-				//Hidden l2 Norm Clipping
+			if (m_netSet.GetClipping() == SettingManager::Clipping::NormClip) {
+				//Hidden Norm Clipping
 				if (hiddenLayer[n].IsAlive()) {
-					normL2 += (hiddenLayer[n].GetGradients()*hiddenLayer[n].GetGradients());
+					clipNormal += (hiddenLayer[n].GetGradients()*hiddenLayer[n].GetGradients());
 				}
 			}
 		}
-		//Hidden l2 Norm Clipping Continued
-		if (m_netSet.GetClipping() == SettingManager::Clipping::L2Clip) {
-			normL2 = sqrt(normL2);
+		//Hidden Norm Clipping Continued
+		if (m_netSet.GetClipping() == SettingManager::Clipping::NormClip) {
+			clipNormal = sqrt(clipNormal);
 			for (unsigned n = 0; n < hiddenLayer.size(); ++n) {
-				hiddenLayer[n].NormClipping(normL2);
+				hiddenLayer[n].NormClipping(clipNormal);
 			}
 		}
 	}

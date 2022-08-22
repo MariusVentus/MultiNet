@@ -55,8 +55,8 @@ void SettingManager::InputSettings(const std::string& dataString)
 			else if (line == "Hard") {
 				m_NetC = Clipping::HardClip;
 			}
-			else if (line == "L2") {
-				m_NetC = Clipping::L2Clip;
+			else if (line == "Norm") {
+				m_NetC = Clipping::NormClip;
 			}
 			ReadLineAndClean(inStream, line);
 			m_ClipThreshold = std::stof(line);

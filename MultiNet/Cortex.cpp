@@ -364,7 +364,7 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 	//Results and Outputs
 	std::cout << "Output: ";
 	if (m_Settings.GetHotToNum() && m_Output.GetORowSize() != 1) {
-		std::cout << DataHandler::GetMaxArrVal(inResultVals);
+		std::cout << DataHandler::GetMaxArrLoc(inResultVals);
 	}
 	else {
 		for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
@@ -388,7 +388,7 @@ void Cortex::DisplayTraining(unsigned buffRow, const std::vector<float>& inResul
 	else {
 		std::cout << "Target: ";
 		if (m_Settings.GetHotToNum() && m_Output.GetORowSize() != 1) {
-			std::cout << DataHandler::GetMaxArrVal(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
+			std::cout << DataHandler::GetMaxArrLoc(m_Output.GetRowX(m_rng.GetSelect(buffRow)));
 		}
 		else {
 			for (unsigned j = 0; j < m_Output.GetORowSize(); j++) {
