@@ -4,7 +4,7 @@
 #include <string>
 
 int main() {
-	std::cout << "Multinet V1.0-alpha \n";
+	std::cout << "Multinet V1.1-alpha \n";
 	std::cout << "Author: MariusVentus \n\n";
 
 	Cortex Brain("Settings\\Settings.txt", "Topologies\\Topology.txt", "Data\\input.txt", "Data\\output.txt");
