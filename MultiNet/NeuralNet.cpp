@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include "NeuralNet.h"
+#include <future>
 
 NeuralNet::NeuralNet(const Topology& netTop, const SettingManager& netSet)
 	:
@@ -93,12 +94,34 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 	}
 
 	//Start from one, as the Input Layer does not need to be Fed.
+	unsigned ThreadCount = 20;
 	for (unsigned layerNum = 1; layerNum < m_layers.size(); ++layerNum) {
 		Layer& prevLayer = m_layers[layerNum - 1];
 		//Normal or SoftMax Layer
 		if (m_layers[layerNum][0].GetMyType() != 99) {
-			for (unsigned n = 0; n < m_layers[layerNum].size() - 1; ++n) {
-				m_layers[layerNum][n].FeedForward(prevLayer);
+			unsigned lSize = (m_layers[layerNum].size() - 1);
+			ThreadCount = std::min(ThreadCount, lSize);
+			unsigned modVal = (lSize % ThreadCount);
+
+			unsigned iMultiplier = (lSize - modVal) / ThreadCount;
+			std::vector<std::future<void>> fHolding(ThreadCount);
+			
+			for (unsigned tc = 0; tc < ThreadCount; tc++) {
+				//Async fun through Neurons
+				fHolding[tc] = std::async(std::launch::async, [=, &prevLayer]() {
+						for (unsigned n = (tc * iMultiplier); n < std::min(((tc + 1) * iMultiplier), lSize); ++n) {
+							m_layers[layerNum][n].FeedForward(prevLayer);
+						}
+					}
+				);
+			}
+			if (modVal != 0) {
+				for (unsigned n = lSize - modVal; n < lSize; ++n) {
+					m_layers[layerNum][n].FeedForward(prevLayer);
+				}
+			}
+			for (unsigned tc = 0; tc < ThreadCount; tc++) {
+				fHolding[tc].wait();
 			}
 		}
 		else {
