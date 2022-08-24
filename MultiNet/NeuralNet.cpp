@@ -94,11 +94,11 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 	}
 
 	//Start from one, as the Input Layer does not need to be Fed.
-	unsigned ThreadCount = 20;
 	for (unsigned layerNum = 1; layerNum < m_layers.size(); ++layerNum) {
 		Layer& prevLayer = m_layers[layerNum - 1];
 		//Normal or SoftMax Layer
 		if (m_layers[layerNum][0].GetMyType() != 99) {
+			unsigned ThreadCount = 20; // Temp until Setting Added. 
 			unsigned lSize = (m_layers[layerNum].size() - 1);
 			ThreadCount = std::min(ThreadCount, lSize);
 			unsigned modVal = (lSize % ThreadCount);
@@ -109,7 +109,7 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 			for (unsigned tc = 0; tc < ThreadCount; tc++) {
 				//Async fun through Neurons
 				fHolding[tc] = std::async(std::launch::async, [=, &prevLayer]() {
-						for (unsigned n = (tc * iMultiplier); n < std::min(((tc + 1) * iMultiplier), lSize); ++n) {
+					for (unsigned n = (tc * iMultiplier); n < ((tc + 1) * iMultiplier); ++n) {
 							m_layers[layerNum][n].FeedForward(prevLayer);
 						}
 					}
@@ -181,13 +181,37 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 		}
 	}
 //Update Weights
+	
 	for (unsigned layerNum = unsigned(m_layers.size()) - 1; layerNum > 0; layerNum--) {
 		Layer& layer = m_layers[layerNum];
 		Layer& prevLayer = m_layers[layerNum - 1];
+		//Async Prep Area
+		unsigned ThreadCount = 20; //Temp until Setting Added
+		unsigned lSize = (layer.size() - 1);
+		ThreadCount = std::min(ThreadCount, lSize);
+		unsigned modVal = (lSize % ThreadCount);
 
-		for (unsigned n = 0; n < layer.size() - 1; ++n) {
-			layer[n].UpdateInputWeights(prevLayer);
+		unsigned iMultiplier = (lSize - modVal) / ThreadCount;
+		std::vector<std::future<void>> fHolding(ThreadCount);
+		
+		for (unsigned tc = 0; tc < ThreadCount; tc++) {
+			//Async fun through Neurons
+			fHolding[tc] = std::async(std::launch::async, [=, &layer, &prevLayer]() {
+					for (unsigned n = (tc * iMultiplier); n < ((tc + 1) * iMultiplier); ++n) {
+						layer[n].UpdateInputWeights(prevLayer);
+					}
+				}
+			);
 		}
+		if (modVal != 0) {
+			for (unsigned n = lSize - modVal; n < lSize; ++n) {
+				layer[n].UpdateInputWeights(prevLayer);
+			}
+		}
+		for (unsigned tc = 0; tc < ThreadCount; tc++) {
+			fHolding[tc].wait();
+		}
+
 	}
 
 	//Dropout - Revive Neurons
