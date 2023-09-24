@@ -4,6 +4,7 @@
 
 SettingManager::SettingManager(const std::string& setFile)
 {
+	m_ThreadCount = 1;
 	InputSettings(setFile);
 }
 
@@ -146,6 +147,11 @@ void SettingManager::InputSettings(const std::string& dataString)
 			ReadLineAndClean(inStream, line);
 			m_PermMem = Stob(line);
 		}
+		else if (line == "[ThreadCount]") {
+		ReadLineAndClean(inStream, line);
+		m_ThreadCount = std::stoul(line);
+		}
+
 		else {
 			continue;
 		}

@@ -53,6 +53,9 @@ private:
 	bool m_RestrictLinear;
 	bool m_PermMem;
 
+	//Concurrency
+	unsigned m_ThreadCount;
+
 //Functions
 public:
 	SettingManager() = delete;
@@ -83,7 +86,7 @@ public:
 	bool IsDropoutActive(void) const { return m_IsDropout; }
 	float GetDropout(void) const { return m_DropoutPercentage; }
 	bool IsMemPerm(void) const { return m_PermMem; }
-
+	unsigned GetThreadCount(void) const { return m_ThreadCount; }
 private:
 	void InputSettings(const std::string& dataString);
 	void ReadLineAndClean(std::ifstream& dataStream, std::string& dataString);

@@ -98,7 +98,7 @@ void NeuralNet::FeedForward(const std::vector<float>& inputVals)
 		Layer& prevLayer = m_layers[layerNum - 1];
 		//Normal or SoftMax Layer
 		if (m_layers[layerNum][0].GetMyType() != 99) {
-			unsigned ThreadCount = 20; // Temp until Setting Added. 
+			unsigned ThreadCount = m_netSet.GetThreadCount();
 			unsigned lSize = (m_layers[layerNum].size() - 1);
 			ThreadCount = std::min(ThreadCount, lSize);
 			unsigned modVal = (lSize % ThreadCount);
@@ -186,7 +186,7 @@ void NeuralNet::BackProp(const std::vector<float>& targetVals)
 		Layer& layer = m_layers[layerNum];
 		Layer& prevLayer = m_layers[layerNum - 1];
 		//Async Prep Area
-		unsigned ThreadCount = 20; //Temp until Setting Added
+		unsigned ThreadCount = m_netSet.GetThreadCount();
 		unsigned lSize = (layer.size() - 1);
 		ThreadCount = std::min(ThreadCount, lSize);
 		unsigned modVal = (lSize % ThreadCount);
